@@ -1,7 +1,6 @@
 library(here)
 library(tidyverse)
 
-
 # read data ----
 # United States Cancer Statistics
 # for years 1999-2016
@@ -29,6 +28,8 @@ by_cancer <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYSITE.TXT",
     )
 )
 
+write_rds(by_cancer, "data/tidy/USCS_by_cancer.rds")
+
 # by age, race, and ethnicity ----
 by_age <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAGE.TXT",
   delim = "|",
@@ -49,6 +50,8 @@ by_age <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAGE.TXT",
       YEAR = col_factor()
     )
 )
+
+write_rds(by_age, "data/tidy/USCS_by_age.rds")
 
 # by state and region ----
 by_state <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA.TXT",
@@ -74,6 +77,8 @@ by_state <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA.TXT",
     )
 )
 
+write_rds(by_state, "data/tidy/USCS_by_state.rds")
+
 # by state and county ----
 by_county <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA_COUNTY.TXT",
   delim = "|",
@@ -98,6 +103,21 @@ by_county <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA_COUNTY.TXT"
       CRUDE_RATE = col_number()
     )
 )
+
+by_az_county <- by_county %>%
+  filter(STATE == "AZ")
+
+write_rds(by_az_county, "data/tidy/USCS_by_az_county.rds")
+
+# save sample dataset
+sample_by_age <- sample_n(by_age, 100)
+sample_by_cancer <- sample_n(by_cancer, 100)
+sample_by_state <- sample_n(by_state, 100)
+
+# write sample to file
+write_rds(sample_by_age, "data/samples/USCS_sample_by_age.rds")
+write_rds(sample_by_cancer, "data/samples/USCS_sample_by_cancer.rds")
+write_rds(sample_by_state, "data/samples/USCS_sample_by_state.rds")
 
 # explore by_age ----
 
