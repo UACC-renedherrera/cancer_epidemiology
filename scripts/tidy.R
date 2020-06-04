@@ -74,7 +74,7 @@ by_state <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA.TXT",
     )
 )
 
-# by state and county ---- 
+# by state and county ----
 by_county <- read_delim("../Cancer_Data_Sources/data_raw/USCS/BYAREA_COUNTY.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
@@ -105,60 +105,76 @@ str(by_age)
 
 # incidence
 by_age %>%
-  filter(EVENT_TYPE == "Incidence",
-         RACE == "All Races",
-         SEX == "Male and Female",
-         SITE == "All Cancer Sites Combined",
-         YEAR == "2012-2016") %>%
+  filter(
+    EVENT_TYPE == "Incidence",
+    RACE == "All Races",
+    SEX == "Male and Female",
+    SITE == "All Cancer Sites Combined",
+    YEAR == "2012-2016"
+  ) %>%
   ggplot(mapping = aes(x = RATE, y = reorder(AGE, RATE))) +
   geom_errorbarh(aes(xmin = CI_LOWER, xmax = CI_UPPER)) +
   geom_bar(aes(x = RATE), stat = "identity") +
-  labs(title = "crude rate of new cancers for USA by age group",
-       subtitle = "years 2012-2016")
+  labs(
+    title = "crude rate of new cancers for USA by age group",
+    subtitle = "years 2012-2016"
+  )
 
-#mortality
+# mortality
 by_age %>%
-  filter(EVENT_TYPE == "Mortality",
-         RACE == "All Races",
-         SEX == "Male and Female",
-         SITE == "All Cancer Sites Combined",
-         YEAR == "2012-2016") %>%
+  filter(
+    EVENT_TYPE == "Mortality",
+    RACE == "All Races",
+    SEX == "Male and Female",
+    SITE == "All Cancer Sites Combined",
+    YEAR == "2012-2016"
+  ) %>%
   ggplot(mapping = aes(x = RATE, y = reorder(AGE, RATE))) +
   geom_errorbarh(aes(xmin = CI_LOWER, xmax = CI_UPPER)) +
   geom_bar(aes(x = RATE), stat = "identity") +
-  labs(title = "crude rate of cancer deaths for USA by age group",
-       subtitle = "years 2012-2016")
+  labs(
+    title = "crude rate of cancer deaths for USA by age group",
+    subtitle = "years 2012-2016"
+  )
 
 # explore by_cancer ----
 str(by_cancer)
 # incidence
 by_cancer %>%
-  filter(EVENT_TYPE == "Mortality",
-         RACE == "All Races",
-         SEX == "Male and Female",
-         SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
-         YEAR == "2012-2016") %>%
+  filter(
+    EVENT_TYPE == "Mortality",
+    RACE == "All Races",
+    SEX == "Male and Female",
+    SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
+    YEAR == "2012-2016"
+  ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:20) %>%
   ggplot(mapping = aes(x = AGE_ADJUSTED_RATE, y = reorder(SITE, AGE_ADJUSTED_RATE))) +
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity") +
-  labs(title = "age adjusted rate of new cancers for USA",
-       subtitle = "years 2012-2016, 20 most common cancers")
+  labs(
+    title = "age adjusted rate of new cancers for USA",
+    subtitle = "years 2012-2016, 20 most common cancers"
+  )
 
 # mortality
 by_cancer %>%
-  filter(EVENT_TYPE == "Incidence",
-         RACE == "All Races",
-         SEX == "Male and Female",
-         SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
-         YEAR == "2012-2016") %>%
+  filter(
+    EVENT_TYPE == "Incidence",
+    RACE == "All Races",
+    SEX == "Male and Female",
+    SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
+    YEAR == "2012-2016"
+  ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:20) %>%
   ggplot(mapping = aes(x = AGE_ADJUSTED_RATE, y = reorder(SITE, AGE_ADJUSTED_RATE))) +
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity") +
-  labs(title = "age adjusted rate of new cancer deaths for USA",
-       subtitle = "years 2012-2016, 20 most common cancers")
+  labs(
+    title = "age adjusted rate of new cancer deaths for USA",
+    subtitle = "years 2012-2016, 20 most common cancers"
+  )
 
 levels(by_cancer$SITE)
