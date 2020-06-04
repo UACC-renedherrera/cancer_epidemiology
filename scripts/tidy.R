@@ -142,7 +142,7 @@ str(by_cancer)
 # incidence
 by_cancer %>%
   filter(
-    EVENT_TYPE == "Mortality",
+    EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
     SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
@@ -161,7 +161,7 @@ by_cancer %>%
 # mortality
 by_cancer %>%
   filter(
-    EVENT_TYPE == "Incidence",
+    EVENT_TYPE == "Mortality",
     RACE == "All Races",
     SEX == "Male and Female",
     SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
