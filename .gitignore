@@ -41,3 +41,8 @@ vignettes/*.pdf
 # data folder
 data/raw
 data/tidy
+
+# communication folder
+communication/reports/*.docx
+communication/reports/*.html
+communication/reports/*.pdf
