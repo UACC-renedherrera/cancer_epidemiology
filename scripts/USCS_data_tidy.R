@@ -243,26 +243,7 @@ by_cancer %>%
     subtitle = "years 2012-2016, 20 most common cancers"
   )
 
-# explore by_az_county ----
-str(by_az_county)
-# incidence
-by_az_county %>%
-  filter(
-    EVENT_TYPE == "Incidence",
-    RACE == "All Races",
-    SEX == "Male and Female",
-    SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
-  ) %>%
-  drop_na() %>%
-  arrange(desc(AGE_ADJUSTED_RATE)) %>%
-  ggplot(mapping = aes(x = AGE_ADJUSTED_RATE, y = reorder(AREA, AGE_ADJUSTED_RATE))) +
-  geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
-  geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity", alpha = 0.5) +
-  labs(
-    title = "age adjusted rate of new cancers for AZ Counties",
-    subtitle = "years 2012-2016"
-  )
+
 
 # mortality
 by_az_county %>%
