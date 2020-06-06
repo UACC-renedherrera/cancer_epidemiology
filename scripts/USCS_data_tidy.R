@@ -111,6 +111,8 @@ by_state <- read_delim("data/raw/USCS_1999-2016/BYAREA.TXT",
     )
 )
 
+by_state <- by_state %>% drop_na()
+
 write_rds(by_state, "data/tidy/USCS_by_state.rds")
 
 # read data
