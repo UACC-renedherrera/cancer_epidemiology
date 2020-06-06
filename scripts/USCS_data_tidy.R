@@ -1,4 +1,4 @@
-# this will 
+# this will
 # 1. download cancer statistics from cdc.gov website
 # 2. unzip files
 # 3. read data to environment
@@ -15,16 +15,16 @@ library(stringr)
 # source citation ----
 # National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.
 
-# download data from source 
+# download data from source
 # download dataset ----
 # set values
 url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2016-ASCII.zip"
 path_zip <- "data/raw"
 path_unzip <- "data/raw/USCS_1999-2016"
 zip_file <- "USCS_1999-2016_ASCII.zip"
-# use curl to download 
+# use curl to download
 curl::curl_download(url, destfile = paste(path_zip, zip_file, sep = "/"))
-#set value
+# set value
 zipped_file <- "data/raw/USCS_1999-2016_ASCII.zip"
 # unzip to folder
 unzip(zipped_file, exdir = path_unzip)
@@ -144,8 +144,10 @@ by_county <- read_delim("data/raw/USCS_1999-2016/BYAREA_COUNTY.TXT",
 # filter to only AZ counties
 # remove "AZ: Unknown (04999)"
 by_az_county <- by_county %>%
-  filter(STATE == "AZ",
-         AREA != "AZ: Unknown (04999)")
+  filter(
+    STATE == "AZ",
+    AREA != "AZ: Unknown (04999)"
+  )
 
 # add column with county FIPS code
 by_az_county <- by_az_county %>%
@@ -321,4 +323,3 @@ by_state %>%
     title = "age adjusted rate of cancer deaths for each USA state",
     subtitle = "years 2012-2016"
   )
-
