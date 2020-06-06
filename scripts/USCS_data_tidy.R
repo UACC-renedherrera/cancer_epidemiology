@@ -1,14 +1,22 @@
-# set up
+# this will 
+# 1. download cancer statistics from cdc.gov website
+# 2. unzip files
+# 3. read data to environment
+# 4. tidy data
+# 5. save data to data/tidy
+
+# set up ----
 # load packages to read and tidy data
 library(here)
 library(tidyverse)
 library(purrr)
+library(stringr)
 
-# source citation
+# source citation ----
 # National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.
 
-# download data from source
-# download dataset
+# download data from source 
+# download dataset ----
 # set values
 url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2016-ASCII.zip"
 path_zip <- "data/raw"
@@ -133,8 +141,25 @@ by_county <- read_delim("data/raw/USCS_1999-2016/BYAREA_COUNTY.TXT",
     )
 )
 
+# filter to only AZ counties
+# remove "AZ: Unknown (04999)"
 by_az_county <- by_county %>%
-  filter(STATE == "AZ")
+  filter(STATE == "AZ",
+         AREA != "AZ: Unknown (04999)")
+
+# add column with county FIPS code
+by_az_county <- by_az_county %>%
+  mutate(FIPS = str_extract(by_az_county$AREA, "\\d+"))
+
+# recode AREA variable to show only county name
+by_az_county <- by_az_county %>%
+  mutate(AREA = str_replace(by_az_county$AREA, "AZ: ", ""))
+by_az_county <- by_az_county %>%
+  mutate(AREA = str_replace(by_az_county$AREA, "\\d+", ""))
+by_az_county <- by_az_county %>%
+  mutate(AREA = str_replace(by_az_county$AREA, " County \\(\\)", ""))
+by_az_county <- by_az_county %>%
+  mutate(AREA = str_replace(by_az_county$AREA, " - 1994\\+", ""))
 
 write_rds(by_az_county, "data/tidy/USCS_by_az_county.rds")
 
