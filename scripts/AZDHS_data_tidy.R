@@ -16,13 +16,27 @@ library(knitr)
 # cancer site: all
 # race: all
 # county: Cochise, Pima, Pinal, Santa Cruz, Yuma 
-# grouped by cancer, sex
+# sort by cancer
+# group by sex
+
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Jun 8, 2020 1:52 PM, MST
+# Year Filter	2016, 2015, 2014, 2013, 2012
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Breast In Situ, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+# 
+# Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020) by Cancer Sites and Sex	
 
 # read data 
 # downloaded data as excel from query module
 # copied table to new spreadsheet
 # saved as csv
-azdhs_catch_incidence <- read_csv("data/raw/AZDHS/query_catchment_incidence.csv",
+azdhs_catch_incidence_2016 <- read_csv("data/raw/AZDHS/query_catchment_incidence_2012-2016.csv",
                             na = c("", "NA", "**", "*"),
                             skip = 1,
                             col_names = c("Cancer",
@@ -42,10 +56,10 @@ azdhs_catch_incidence <- read_csv("data/raw/AZDHS/query_catchment_incidence.csv"
 )
 
 # examine dataset
-glimpse(azdhs_catch_incidence)
+glimpse(azdhs_catch_incidence_2016)
 
 # top 5 incidence for each sex
-azdhs_catch_top_5_inc <- azdhs_catch_incidence %>%
+azdhs_catch_2016_top_5_inc <- azdhs_catch_incidence_2016 %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
          Cancer != "Other Invasive") %>%
@@ -53,9 +67,10 @@ azdhs_catch_top_5_inc <- azdhs_catch_incidence %>%
   slice(1:5)
 
 # view as table 
-azdhs_catch_top_5_inc %>% 
+azdhs_catch_2016_top_5_inc %>% 
   select(Sex, Cancer, Age_Adj_Rate) %>%
-  kable()
+  kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"),
+        caption = "Top 5 Incident Cancer in Five County Catchment")
 
 # top 5 incidence catchment hispanic ----
 # year: 2012-2016
@@ -64,11 +79,23 @@ azdhs_catch_top_5_inc %>%
 # county: Cochise, Pima, Pinal, Santa Cruz, Yuma 
 # grouped by cancer, sex
 
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Jun 8, 2020 1:55 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Breast In Situ, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
 # read data 
 # downloaded data as excel from query module
 # copied table to new spreadsheet
 # saved as csv
-azdhs_catch_incidence_hisp <- read_csv("data/raw/AZDHS/query_catchment_incidence_hisp.csv",
+azdhs_catch_incidence_2016_hisp <- read_csv("data/raw/AZDHS/query_catchment_incidence_2012_2016_hisp.csv",
                                       na = c("", "NA", "**", "*"),
                                       skip = 1,
                                       col_names = c("Cancer",
@@ -87,10 +114,10 @@ azdhs_catch_incidence_hisp <- read_csv("data/raw/AZDHS/query_catchment_incidence
                                                        "95CI_max" = col_number()),
 )
 
-glimpse(azdhs_catch_incidence_hisp)
+glimpse(azdhs_catch_incidence_2016_hisp)
 
 # top 5 incidence for each sex
-azdhs_catch_incidence_hisp <- azdhs_catch_incidence_hisp %>%
+azdhs_catch_incidence_2016_hisp <- azdhs_catch_incidence_2016_hisp %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
          Cancer != "Other Invasive") %>%
@@ -98,6 +125,7 @@ azdhs_catch_incidence_hisp <- azdhs_catch_incidence_hisp %>%
   slice(1:5)
 
 # view as table 
-azdhs_catch_incidence_hisp %>% 
+azdhs_catch_incidence_2016_hisp %>% 
   select(Sex, Cancer, Age_Adj_Rate) %>%
-  kable()
+  kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"))
+
