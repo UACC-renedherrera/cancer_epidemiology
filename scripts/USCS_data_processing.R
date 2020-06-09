@@ -2,7 +2,7 @@
 # packages 
 library(here)
 library(tidyverse)
-library(purrr)
+#library(purrr)
 library(ggthemes)
 library(knitr)
 
@@ -46,6 +46,23 @@ by_state %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:6) %>%
   select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
+  kable(caption = "Age-Adjusted Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
+        col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper"))
+
+# data table
+# top five incidence cancers only
+# grouped by cancer, sex
+by_state %>%
+  drop_na() %>%
+  filter(AREA == "Arizona",
+         EVENT_TYPE == "Incidence",
+         RACE == "All Races",
+         YEAR == "2012-2016",
+         SITE != "All Cancer Sites Combined") %>%
+  group_by(SEX) %>%
+  arrange(desc(AGE_ADJUSTED_RATE)) %>%
+  slice(1:5) %>%
+  select(SITE, SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(caption = "Age-Adjusted Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
         col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper"))
 
