@@ -4,7 +4,6 @@
 # set up ---- 
 library(here)
 library(tidyverse)
-library(ggthemes)
 library(knitr)
 
 # what are the top 5 incident cancers?
@@ -58,7 +57,16 @@ azdhs_catch_incidence_2016 <- read_csv("data/raw/AZDHS/query_catchment_incidence
 # examine dataset
 glimpse(azdhs_catch_incidence_2016)
 
+# add variables to define dataset
+azdhs_catch_incidence_2016 <- azdhs_catch_incidence_2016 %>%
+  mutate(Year = "2012-2016",
+         Race = "All Races")
+
+# save dataset to file
+write_rds(azdhs_catch_incidence_2016, "data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
+
 # top 5 incidence for each sex
+# grouped by sex
 azdhs_catch_2016_top_5_inc <- azdhs_catch_incidence_2016 %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
@@ -87,7 +95,7 @@ azdhs_catch_2016_top_5_inc %>%
 # Time of Query	Mon, Jun 8, 2020 1:55 PM, MST
 # Year Filter	2017, 2016, 2015, 2014, 2013
 # Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Breast In Situ, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
-# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# Race Filter	White, Hispanic
 # County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
 # Data Grouped By	Cancer Sites, Sex
 
@@ -114,10 +122,17 @@ azdhs_catch_incidence_2016_hisp <- read_csv("data/raw/AZDHS/query_catchment_inci
                                                        "95CI_max" = col_number()),
 )
 
-glimpse(azdhs_catch_incidence_2016_hisp)
+# add variables to identify dateset
+azdhs_catch_incidence_2016_hisp <- azdhs_catch_incidence_2016_hisp %>%
+  mutate(Year = "2012-2016",
+         Race = "White, Hispanic")
+
+# save dataset to file
+write_rds(azdhs_catch_incidence_2016_hisp, "data/tidy/azdhs_catchment_2012-2016_hispanic_incidence_by_cancer.rds")
 
 # top 5 incidence for each sex
-azdhs_catch_incidence_2016_hisp <- azdhs_catch_incidence_2016_hisp %>%
+# grouped by sex
+azdhs_catch_incidence_2016_hisp_top_5 <- azdhs_catch_incidence_2016_hisp %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
          Cancer != "Other Invasive") %>%
@@ -125,7 +140,7 @@ azdhs_catch_incidence_2016_hisp <- azdhs_catch_incidence_2016_hisp %>%
   slice(1:5)
 
 # view as table 
-azdhs_catch_incidence_2016_hisp %>% 
+azdhs_catch_incidence_2016_hisp_top_5 %>% 
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"))
 
@@ -147,7 +162,6 @@ azdhs_catch_incidence_2016_hisp %>%
 # Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
 # County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
 # Data Grouped By	Cancer Sites, Sex
-
 
 # read data 
 # downloaded data as excel from query module
@@ -175,8 +189,17 @@ azdhs_catch_incidence_2017 <- read_csv("data/raw/AZDHS/query_catchment_incidence
 # examine dataset
 glimpse(azdhs_catch_incidence_2017)
 
-# top 5 incidence for each sex
+# add variables to identify dataset 
 azdhs_catch_incidence_2017 <- azdhs_catch_incidence_2017 %>%
+  mutate(Year = "2013-2017",
+         Race = "All Races")
+
+# save dataset to file
+write_rds(azdhs_catch_incidence_2017, "data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
+
+# top 5 incidence for each sex
+# grouped by sex 
+azdhs_catch_incidence_2017_top_5 <- azdhs_catch_incidence_2017 %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
          Cancer != "Other Invasive") %>%
@@ -184,7 +207,7 @@ azdhs_catch_incidence_2017 <- azdhs_catch_incidence_2017 %>%
   slice(1:5)
 
 # view as table 
-azdhs_catch_incidence_2017 %>% 
+azdhs_catch_incidence_2017_top_5 %>% 
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"),
         caption = "Top 5 Incident Cancer in Five County Catchment")
@@ -230,10 +253,17 @@ azdhs_catch_incidence_2017_hisp <- read_csv("data/raw/AZDHS/query_catchment_inci
                                                              "95CI_max" = col_number()),
 )
 
-glimpse(azdhs_catch_incidence_2017_hisp)
+# add variables to identify dataset 
+azdhs_catch_incidence_2017_hisp <- azdhs_catch_incidence_2017_hisp %>%
+  mutate(Year = "2013-2017",
+         Race = "White, Hispanic")
+
+# save dataset to file
+write_rds(azdhs_catch_incidence_2017_hisp, "data/tidy/azdhs_catchment_2013-2017_hispanic_incidence_by_cancer.rds")
 
 # top 5 incidence for each sex
-azdhs_catch_incidence_2017_hisp <- azdhs_catch_incidence_2017_hisp %>%
+# group by sex 
+azdhs_catch_incidence_2017_hisp_top_5 <- azdhs_catch_incidence_2017_hisp %>%
   group_by(Sex) %>%
   filter(Cancer != "All",
          Cancer != "Other Invasive") %>%
@@ -241,7 +271,7 @@ azdhs_catch_incidence_2017_hisp <- azdhs_catch_incidence_2017_hisp %>%
   slice(1:5)
 
 # view as table 
-azdhs_catch_incidence_2017_hisp %>% 
+azdhs_catch_incidence_2017_hisp_top_5 %>% 
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"))
 
