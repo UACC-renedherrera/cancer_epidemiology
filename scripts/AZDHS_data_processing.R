@@ -165,6 +165,7 @@ azdhs_catch_incidence_2017_hisp_top_5 %>%
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"))
 
+# compare with uscs crude rate ----
 # combine azdhs and uscs on one chart to compare difference in rates for catchment
 # read uscs data
 uscs <- read_rds("data/tidy/USCS_by_az_county.rds")
