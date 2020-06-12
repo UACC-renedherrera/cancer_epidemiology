@@ -5,6 +5,7 @@
 library(here)
 library(tidyverse)
 library(knitr)
+library(dataMaid)
 
 # what are the top 5 incident cancers?
 
@@ -71,6 +72,9 @@ azdhs_catch_incidence_2016 <- azdhs_catch_incidence_2016 %>%
 # save dataset to file
 write_rds(azdhs_catch_incidence_2016, "data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
 
+# use datamaid package to generate codebook
+makeCodebook(azdhs_catch_incidence_2016, file = "data/tidy/codebook_azdhs_catch_incidence_2016.Rmd")
+
 # top 5 incidence catchment hispanic ----
 # year: 2012-2016
 # cancer site: all
@@ -127,6 +131,9 @@ azdhs_catch_incidence_2016_hisp <- azdhs_catch_incidence_2016_hisp %>%
 
 # save dataset to file
 write_rds(azdhs_catch_incidence_2016_hisp, "data/tidy/azdhs_catchment_2012-2016_hispanic_incidence_by_cancer.rds")
+
+# use datamaid package to generate codebook
+makeCodebook(azdhs_catch_incidence_2016_hisp, file = "data/tidy/codebook_azdhs_catch_incidence_2016_hisp.Rmd")
 
 # top 5 incidence catchment ----
 # year: 2013-2017
@@ -185,6 +192,9 @@ azdhs_catch_incidence_2017 <- azdhs_catch_incidence_2017 %>%
 # save dataset to file
 write_rds(azdhs_catch_incidence_2017, "data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
 
+# use datamaid package to generate codebook
+makeCodebook(azdhs_catch_incidence_2017, file = "data/tidy/codebook_azdhs_catch_incidence_2017.Rmd")
+
 # top 5 incidence catchment hispanic ----
 # year: 2013-2017
 # cancer site: all
@@ -240,3 +250,6 @@ azdhs_catch_incidence_2017_hisp <- azdhs_catch_incidence_2017_hisp %>%
 
 # save dataset to file
 write_rds(azdhs_catch_incidence_2017_hisp, "data/tidy/azdhs_catchment_2013-2017_hispanic_incidence_by_cancer.rds")
+
+# use datamaid package to generate codebook
+makeCodebook(azdhs_catch_incidence_2017_hisp, file = "data/tidy/codebook_azdhs_catch_incidence_2017_hisp.Rmd")
