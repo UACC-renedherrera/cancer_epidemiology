@@ -123,9 +123,21 @@ azdhs_catch_incidence_2017_top_5 <- azdhs_catch_incidence_2017 %>%
 azdhs_catch_incidence_2017_top_5 %>%
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(
-    col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"),
-    caption = "Top 5 Incident Cancer in Five County Catchment"
+    col.names = c("Sex", "Cancer", "Age Adjusted Incidence Rate per 100,000"),
+    caption = "5 Most Common New Cancers in Five County Catchment. Source: Arizona Cancer Registry Module (2013-2017"
   )
+
+# view as plot 
+azdhs_catch_incidence_2017_top_5 %>%
+  ggplot(aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
+  geom_col(position = "dodge", alpha = 0.5) +
+  facet_wrap("Sex") +
+  theme_solarized() +
+  labs(title = "5 Most Common New Cancers",
+       subtitle = "in Five County Catchment, for 2013-2017, All Races",
+       y = "",
+       x = "Age Adjusted Rate per 100,000",
+       caption = "Source: Arizona Cancer Registry Query Module (2013-2017)")
 
 # hispanic only 2016 ---- 
 # top 5 incidence for each sex
