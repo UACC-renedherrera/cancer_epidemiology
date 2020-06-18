@@ -189,6 +189,9 @@ azdhs_catch_incidence_2017 <- azdhs_catch_incidence_2017 %>%
     Race = "All Races"
   )
 
+# change sex from "All" to "Male and female"
+azdhs_catch_incidence_2017$Sex <- recode_factor(azdhs_catch_incidence_2017$Sex, "All" = "Male and female")
+
 # save dataset to file
 write_rds(azdhs_catch_incidence_2017, "data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
 
@@ -247,6 +250,9 @@ azdhs_catch_incidence_2017_hisp <- azdhs_catch_incidence_2017_hisp %>%
     Year = "2013-2017",
     Race = "White, Hispanic"
   )
+
+# change sex from "All" to "Male and female"
+azdhs_catch_incidence_2017_hisp$Sex <- recode_factor(azdhs_catch_incidence_2017$Sex, "All" = "Male and female")
 
 # save dataset to file
 write_rds(azdhs_catch_incidence_2017_hisp, "data/tidy/azdhs_catchment_2013-2017_hispanic_incidence_by_cancer.rds")
