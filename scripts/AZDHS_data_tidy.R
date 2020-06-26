@@ -286,7 +286,7 @@ pima_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_can
                                   "95CI_max"
                                 ),
                                 col_types = cols(
-                                  Cancer = col_character(),
+                                  Cancer = col_factor(),
                                   Sex = col_factor(),
                                   Case_Count = col_number(),
                                   Population = col_number(),
