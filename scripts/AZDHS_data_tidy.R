@@ -259,3 +259,59 @@ write_rds(azdhs_catch_incidence_2017_hisp, "data/tidy/azdhs_catchment_2013-2017_
 
 # use datamaid package to generate codebook
 makeCodebook(azdhs_catch_incidence_2017_hisp, file = "data/tidy/codebook_azdhs_catch_incidence_2017_hisp.Rmd")
+
+# pima county incidence ----
+# by cancer
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Fri, Jun 26, 2020 9:41 AM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Breast In Situ, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# County Filter	County, Pima
+# Data Grouped By	Cancer Sites, Sex
+
+pima_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_cancer.csv",
+                                na = c("", "NA", "**", "*"),
+                                skip = 1,
+                                col_names = c(
+                                  "Cancer",
+                                  "Sex",
+                                  "Case_Count",
+                                  "Population",
+                                  "Age_Adj_Rate",
+                                  "95CI_min",
+                                  "95CI_max"
+                                ),
+                                col_types = cols(
+                                  Cancer = col_character(),
+                                  Sex = col_factor(),
+                                  Case_Count = col_number(),
+                                  Population = col_number(),
+                                  Age_Adj_Rate = col_number(),
+                                  "95CI_min" = col_number(),
+                                  "95CI_max" = col_number()
+                                ),
+)
+
+# add variables to define dataset
+pima_by_cancer <- pima_by_cancer %>%
+  mutate(
+    Year = "2013-2017",
+    Race = "All Races"
+  )
+
+# save dataset to file
+write_rds(pima_by_cancer, "data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
+
+# use datamaid package to generate codebook
+makeCodebook(pima_by_cancer, file = "data/tidy/codebook_azdhs_pima_incidence_2013-2017_by_cancer.Rmd")
+
+
+# by race
+# by sex
+# by age?
+
+
