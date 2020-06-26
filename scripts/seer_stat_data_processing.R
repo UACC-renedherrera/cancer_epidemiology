@@ -28,7 +28,7 @@ catchment_mortality %>%
   arrange(desc(age_adjusted_rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(cancer, age_adjusted_rate))) +
-  geom_col(position = "dodge", alpha = 0.5) +
+  geom_col(position = "dodge", alpha = 0.8) +
   labs(title = "Top 5 Cancer Deaths in Catchment for years 2013-2017",
        subtitle = "all sexes, all races",
        x = "Age Adjusted Rate per 100,000",
@@ -66,7 +66,7 @@ catchment_mortality_hispanic %>%
   arrange(desc(age_adjusted_rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(cancer, age_adjusted_rate))) +
-  geom_col(position = "dodge", alpha = 0.5) +
+  geom_col(position = "dodge", alpha = 0.8) +
   labs(title = "Top 5 Cancer Deaths in Catchment for years 2013-2017",
        subtitle = "hispanic only ",
        x = "Age Adjusted Rate per 100,000",
@@ -109,7 +109,7 @@ pima_mortality_by_cancer %>%
   arrange(desc(age_adjusted_rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(cancer, age_adjusted_rate))) +
-  geom_col(position = "dodge", alpha = 0.5) +
+  geom_col(position = "dodge", alpha = 0.8) +
   labs(title = "Top 5 Cancer Deaths in Pima County, AZ",
        subtitle = "Five year average 2013-2017; All races",
        x = "Age Adjusted Mortality Rate per 100,000",
@@ -117,3 +117,29 @@ pima_mortality_by_cancer %>%
        caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
   facet_wrap("sex") +
   theme_solarized()
+
+# read dataset pima mortality by race----
+pima_mortality_by_race <- read_rds("data/tidy/seer_stat_pima_mortality_2013-2017_by_race.rds")
+
+# determine top five cancers for each sex grouping 
+
+# table
+pima_mortality_by_race %>% 
+  group_by(race, sex) %>%
+  select(year, cancer, race, sex, age_adjusted_rate) %>%
+  kable(caption = "Age adjusted mortality rate per 100,000 for five county catchment, for all races combined, for all sexes, and all cancer, year 2013-2017",
+        col.names = c("Year", "Cancer", "Race", "Sex", "Age Adjusted Rate per 100,000"))
+
+# plot 
+pima_mortality_by_race %>% 
+  group_by(race, sex) %>%
+  ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(sex, age_adjusted_rate), fill = sex)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  labs(title = "Top 5 Cancer Deaths in Pima County, AZ",
+       subtitle = "Five year average 2013-2017; All races",
+       x = "Age Adjusted Mortality Rate per 100,000",
+       y = "",
+       caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
+  facet_wrap("race") +
+  theme_solarized() +
+  theme(legend.position = "bottom")
