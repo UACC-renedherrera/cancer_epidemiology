@@ -273,7 +273,7 @@ makeCodebook(azdhs_catch_incidence_2017_hisp, file = "data/tidy/codebook_azdhs_c
 # County Filter	County, Pima
 # Data Grouped By	Cancer Sites, Sex
 
-pima_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_cancer.csv",
+pima_incidence_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_cancer.csv",
                                 na = c("", "NA", "**", "*"),
                                 skip = 1,
                                 col_names = c(
@@ -297,19 +297,19 @@ pima_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_can
 )
 
 # add variables to define dataset
-pima_by_cancer <- pima_by_cancer %>%
+pima_incidence_by_cancer <- pima_incidence_by_cancer %>%
   mutate(
     Year = "2013-2017",
     Race = "All Races"
   )
 
-pima_by_cancer$Sex <- fct_recode(pima_by_cancer$Sex, "Male and Female" = "All")
+pima_incidence_by_cancer$Sex <- fct_recode(pima_incidence_by_cancer$Sex, "Male and Female" = "All")
 
 # save dataset to file
-write_rds(pima_by_cancer, "data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
+write_rds(pima_incidence_by_cancer, "data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
 
 # use datamaid package to generate codebook
-makeCodebook(pima_by_cancer, file = "data/tidy/codebook_azdhs_pima_incidence_2013-2017_by_cancer.Rmd")
+makeCodebook(pima_incidence_by_cancer, file = "data/tidy/codebook_azdhs_pima_incidence_2013-2017_by_cancer.Rmd")
 
 
 # by race
