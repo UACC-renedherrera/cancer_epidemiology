@@ -1,0 +1,144 @@
+---
+title: "Pima County, AZ: Dashboard Describing the Cancer Burden"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    theme: journal
+---
+
+
+```{r setup, include=FALSE}
+# load packages
+library(flexdashboard)
+library(here)
+library(tidyverse)
+library(knitr)
+library(ggthemes)
+library(plotly)
+
+# read data
+pima_incidence_by_cancer <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
+pima_incidence_by_race <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_race.rds")
+
+# plot
+plot_pima_incidence_by_cancer <- pima_incidence_by_cancer %>%
+  group_by(Sex) %>%
+  filter(Cancer != "All") %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  facet_wrap("Sex") +
+  theme_solarized() +
+  theme(legend.position = "bottom") +
+  labs(title = "Top 5 Incident Cancer for Pima County, AZ",
+       subtitle = "2013-2017; All races; Grouped by sex",
+       x = "Age Adjusted Rate per 100,000",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
+# plot
+plot_pima_incidence_by_race <-  pima_incidence_by_race %>%
+  group_by(Race, Sex) %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(y = reorder(Sex, Age_Adj_Rate), x = Age_Adj_Rate, fill = Sex)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  facet_wrap("Race") +
+  theme_solarized() +
+  theme(legend.position = "bottom") +
+  labs(title = "Top 5 Incident Cancer for Pima County, AZ",
+       subtitle = "2013-2017; All races; Grouped by race and sex",
+       x = "Age Adjusted Incidence Rate per 100,000",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+```
+
+
+### Top 5 New Cancers for Pima County, AZ grouped by sex, for all races 
+
+
+```{r incidence_by_cancer}
+# show top five as plot 
+ggplotly(plot_pima_incidence_by_cancer)
+```
+
+
+***
+
+
+The chart shows the top five incident cancers for:
+
+
+- male and female combined
+- male only
+- female only
+
+
+Data shown is the five year average for years 2013-2017, for all races combined. 
+
+
+Source: 
+
+
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html
+
+
+### New Cancers for Pima County, AZ grouped by race and by sex
+
+
+```{r incidence_by_race}
+ggplotly(plot_pima_incidence_by_race)
+```
+
+
+*** 
+
+
+The chart shows the incident cancer for each race in Pima County, AZ grouped by sex. 
+
+
+Data source: 
+
+
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html
+
+
+### Age adjusted incidence rates by age for Pima County, AZ
+
+
+*** 
+
+
+This panel shows a graph of the age adjusted incidence rates by age for Pima County, AZ
+
+
+### Age adjusted incidence rates by year for Pima County, AZ
+
+
+*** 
+
+
+This panel shows a graph of the age adjusted incidence rates by age for Pima County, AZ
+
+
+### Top 5 Cancer Deaths for Pima County, AZ grouped by sex
+
+
+*** 
+
+
+This panel shows a graph of the top 5 cancer deaths for Pima County, AZ
+
+
+### Cancer Deaths for Pima County, AZ grouped by race and sex
+
+
+*** 
+
+
+This panel shows a graph of the cancer deaths for Pima County, AZ grouped by race and sex.
+
+
+### 
