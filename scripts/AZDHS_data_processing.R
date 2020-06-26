@@ -247,10 +247,10 @@ combined %>%
 
 # pima incidence by cancer ----
 # read data
-pima_by_cancer <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
+pima_incidence_by_cancer <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
 
 # show top 5 as table
-pima_by_cancer %>%
+pima_incidence_by_cancer %>%
   group_by(Sex) %>%
   filter(Cancer != "All") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -260,7 +260,7 @@ pima_by_cancer %>%
         caption = "Age adjusted incidence rate for Pima County, AZ; Most recent five year average (2013-2017); All races; 5 most incident cancers grouped by sex")
 
 # show top five as plot 
-pima_by_cancer %>%
+pima_incidence_by_cancer %>%
   group_by(Sex) %>%
   filter(Cancer != "All") %>%
   arrange(desc(Age_Adj_Rate)) %>%
