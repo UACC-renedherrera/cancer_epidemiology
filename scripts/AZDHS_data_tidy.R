@@ -303,6 +303,8 @@ pima_by_cancer <- pima_by_cancer %>%
     Race = "All Races"
   )
 
+pima_by_cancer$Sex <- fct_recode(pima_by_cancer$Sex, "Male and Female" = "All")
+
 # save dataset to file
 write_rds(pima_by_cancer, "data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
 
