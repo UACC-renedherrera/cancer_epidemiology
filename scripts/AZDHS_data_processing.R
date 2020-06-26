@@ -23,7 +23,7 @@ azdhs %>%
   arrange(desc(Age_Adj_Rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate, fill = Year)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Sex") +
   theme_solarized() +
   theme(legend.position = "bottom") +
@@ -63,7 +63,7 @@ azdhs_hisp %>%
   arrange(desc(Age_Adj_Rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate, fill = Year)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Sex") +
   theme_solarized() +
   theme(legend.position = "bottom") +
@@ -130,7 +130,7 @@ azdhs_catch_incidence_2017_top_5 %>%
 # view as plot 
 azdhs_catch_incidence_2017_top_5 %>%
   ggplot(aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
-  geom_col(position = "dodge", alpha = 0.5) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Sex") +
   theme_solarized() +
   labs(title = "5 Most Common New Cancers",
@@ -234,7 +234,7 @@ combined %>%
   arrange(desc(Age_Adj_Rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate, fill = Year)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Sex") +
   theme_solarized() +
   theme(legend.position = "bottom") +
@@ -266,7 +266,7 @@ pima_incidence_by_cancer %>%
   arrange(desc(Age_Adj_Rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Sex") +
   theme_solarized() +
   theme(legend.position = "bottom") +
@@ -295,7 +295,7 @@ pima_incidence_by_race %>%
   arrange(desc(Age_Adj_Rate)) %>%
   slice(1:5) %>%
   ggplot(mapping = aes(y = reorder(Sex, Age_Adj_Rate), x = Age_Adj_Rate, fill = Sex)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.8) +
   facet_wrap("Race") +
   theme_solarized() +
   theme(legend.position = "bottom") +
