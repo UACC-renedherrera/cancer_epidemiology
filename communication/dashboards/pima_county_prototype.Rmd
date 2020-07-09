@@ -17,9 +17,9 @@ library(knitr)
 library(ggthemes)
 library(plotly)
 
+# incidence by cancer and sex
 # read data
 pima_incidence_by_cancer <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_cancer.rds")
-pima_incidence_by_race <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_race.rds")
 
 # plot
 plot_pima_incidence_by_cancer <- pima_incidence_by_cancer %>%
@@ -38,6 +38,10 @@ plot_pima_incidence_by_cancer <- pima_incidence_by_cancer %>%
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
 
+# incidence by race and sex
+# read data
+pima_incidence_by_race <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_race.rds")
+
 # plot
 plot_pima_incidence_by_race <-  pima_incidence_by_race %>%
   group_by(Race, Sex) %>%
@@ -53,6 +57,106 @@ plot_pima_incidence_by_race <-  pima_incidence_by_race %>%
        x = "Age Adjusted Incidence Rate per 100,000",
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
+
+# incidence by age and sex
+# read data
+pima_incidence_by_age <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_age.rds")
+
+# show top five as plot 
+plot_pima_incidence_by_age <- pima_incidence_by_age %>%
+  filter(Age_Group != "All") %>%
+  group_by(Sex) %>%
+  arrange(desc(Case_Count)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(y = reorder(Age_Group, Case_Count), x = Case_Count)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  facet_wrap("Sex") +
+  theme_solarized() +
+  theme(legend.position = "bottom") +
+  labs(title = "Age Groups with Highest Number of New Cancer Cases",
+       subtitle = "2013-2017; All races; Grouped by sex",
+       x = "New Cases",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
+# incidence by sex over time
+# read data
+
+# show plot
+
+
+# mortality by cancer and sex
+# read data
+pima_mortality_by_cancer <- read_rds("data/tidy/seer_stat_pima_mortality_2013-2017.rds")
+
+# determine top five cancers for each sex grouping 
+# filter out "system"
+# and save to value for use later
+cancer_to_exclude <- str_subset(pima_mortality_by_cancer$cancer, " System")
+
+# show plot
+plot_pima_mortality_by_cancer <- pima_mortality_by_cancer %>% 
+  group_by(sex) %>%
+  filter(cancer != "Miscellaneous Malignant Cancer" &
+           cancer != "Colon excluding Rectum" &
+           cancer != "All Causes of Death" & 
+           cancer != "All Malignant Cancers" & 
+           !(cancer %in% cancer_to_exclude)) %>%
+  select(sex, cancer, age_adjusted_rate) %>%
+  arrange(desc(age_adjusted_rate)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(cancer, age_adjusted_rate))) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  labs(title = "Top 5 Cancer Deaths in Pima County, AZ",
+       subtitle = "Five year average 2013-2017; All races",
+       x = "Age Adjusted Mortality Rate per 100,000",
+       y = "",
+       caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
+  facet_wrap("sex") +
+  theme_solarized()
+
+# mortality by race and sex
+# read data
+pima_mortality_by_race <- read_rds("data/tidy/seer_stat_pima_mortality_2013-2017_by_race.rds")
+
+# show plot
+plot_pima_mortality_by_race <- pima_mortality_by_race %>% 
+  group_by(race, sex) %>%
+  ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(sex, age_adjusted_rate), fill = sex)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  labs(title = "Top 5 Cancer Deaths in Pima County, AZ",
+       subtitle = "Five year average 2013-2017; All races",
+       x = "Age Adjusted Mortality Rate per 100,000",
+       y = "",
+       caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
+  facet_wrap("race") +
+  theme_solarized() +
+  theme(legend.position = "bottom")
+
+# mortality by age and sex
+# read data
+pima_mortality_by_age <- read_rds("data/tidy/seer_stat_pima_mortality_2013-2017_by_age.rds")
+
+# show plot
+plot_pima_mortality_by_age <- pima_mortality_by_age %>%
+  group_by(sex) %>%
+  arrange(desc(age_adjusted_rate)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(age_group, age_adjusted_rate))) +
+  geom_col(position = "dodge") +
+  facet_wrap("sex") +
+  labs(title = "Age Groups with Most Cancer Deaths in Pima County, AZ",
+       subtitle = "Five year average 2013-2017; All races combined",
+       x = "Age Adjusted Mortality Rate per 100,000",
+       y = "",
+       caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
+  theme_solarized() +
+  theme(legend.position = "bottom")
+
+# mortality by sex over time
+# read data
+
+# show plot
 ```
 
 
@@ -82,7 +186,7 @@ Data shown is the five year average for years 2013-2017, for all races combined.
 Source: 
 
 
-The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
 ### New Cancers for Pima County, AZ grouped by race and by sex
@@ -96,34 +200,60 @@ ggplotly(plot_pima_incidence_by_race)
 *** 
 
 
-The chart shows the incident cancer for each race in Pima County, AZ grouped by sex. 
+The chart shows the five year average (2013-2017) of incident cancer for each race in Pima County, AZ grouped by sex. 
 
 
 Data source: 
 
 
-The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
 ### Age adjusted incidence rates by age for Pima County, AZ
 
 
+```{r incidence_by_age}
+ggplotly(plot_pima_incidence_by_age)
+```
+
+
 *** 
 
 
-This panel shows a graph of the age adjusted incidence rates by age for Pima County, AZ
+This panel shows a graph of the age groups with the highest number of new cases for the five year period from 2013 - 2017; for Pima County, AZ.
+
+
+Data source: 
+
+
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
 ### Age adjusted incidence rates by year for Pima County, AZ
 
 
+... in progress ...
+
+
 *** 
 
 
-This panel shows a graph of the age adjusted incidence rates by age for Pima County, AZ
+This panel shows a graph of the age adjusted incidence rates by for Pima County, AZ over time 
+
+
+Data source: 
+
+
+The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
+
 
 
 ### Top 5 Cancer Deaths for Pima County, AZ grouped by sex
+
+
+```{r mortality_by_cancer}
+ggplotly(plot_pima_mortality_by_cancer)
+```
 
 
 *** 
@@ -132,7 +262,18 @@ This panel shows a graph of the age adjusted incidence rates by age for Pima Cou
 This panel shows a graph of the top 5 cancer deaths for Pima County, AZ
 
 
+Data source: 
+
+
+Surveillance, Epidemiology, and End Results (SEER) Program ([www.seer.cancer.gov](www.seer.cancer.gov)) SEER*Stat Database: Mortality - All COD, Aggregated With County, Total U.S. (1990-2017) <Katrina/Rita Population Adjustment> - Linked To County Attributes - Total U.S., 1969-2018 Counties, National Cancer Institute, DCCPS, Surveillance Research Program, released December 2019.  Underlying mortality data provided by NCHS ([www.cdc.gov/nchs](www.cdc.gov/nchs)).
+
+
 ### Cancer Deaths for Pima County, AZ grouped by race and sex
+
+
+```{r mortality_by_race}
+ggplotly(plot_pima_mortality_by_race)
+```
 
 
 *** 
@@ -141,4 +282,125 @@ This panel shows a graph of the top 5 cancer deaths for Pima County, AZ
 This panel shows a graph of the cancer deaths for Pima County, AZ grouped by race and sex.
 
 
-### 
+Data source: 
+
+
+Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov) SEER*Stat Database: Mortality - All COD, Aggregated With County, Total U.S. (1990-2017) <Katrina/Rita Population Adjustment> - Linked To County Attributes - Total U.S., 1969-2018 Counties, National Cancer Institute, DCCPS, Surveillance Research Program, released December 2019.  Underlying mortality data provided by NCHS (www.cdc.gov/nchs).
+
+
+### Age Groups with highest number of Cancer Deaths for Pima County, AZ 
+
+
+```{r mortality_by_age}
+ggplotly(plot_pima_mortality_by_age)
+```
+
+
+***
+
+
+The age groups with the highest number of cancer deaths in Pima County, AZ; presented as an age adjusted rate 
+
+
+Data source: 
+
+
+Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov) SEER*Stat Database: Mortality - All COD, Aggregated With County, Total U.S. (1990-2017) <Katrina/Rita Population Adjustment> - Linked To County Attributes - Total U.S., 1969-2018 Counties, National Cancer Institute, DCCPS, Surveillance Research Program, released December 2019.  Underlying mortality data provided by NCHS (www.cdc.gov/nchs).
+
+
+### Cancer Deaths Over Time in Pima County, AZ
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization 
+
+
+### Population Demographics: Total population in Pima County 
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Population Demographics: Sex and Age 
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Population Demographics: Sex and Race 
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Population Demographics: Education 
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Population Demographics: Income 
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Screening:
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
+### Health Behavior
+
+
+... in progress ...
+
+
+***
+
+
+Describe the visualization
+
+
