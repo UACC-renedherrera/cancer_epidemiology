@@ -275,26 +275,26 @@ makeCodebook(azdhs_catch_incidence_2017_hisp, file = "data/tidy/codebook_azdhs_c
 
 # read data
 pima_incidence_by_cancer <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_cancer.csv",
-                                na = c("", "NA", "**", "*"),
-                                skip = 1,
-                                col_names = c(
-                                  "Cancer",
-                                  "Sex",
-                                  "Case_Count",
-                                  "Population",
-                                  "Age_Adj_Rate",
-                                  "95CI_min",
-                                  "95CI_max"
-                                ),
-                                col_types = cols(
-                                  Cancer = col_factor(),
-                                  Sex = col_factor(),
-                                  Case_Count = col_number(),
-                                  Population = col_number(),
-                                  Age_Adj_Rate = col_number(),
-                                  "95CI_min" = col_number(),
-                                  "95CI_max" = col_number()
-                                ),
+  na = c("", "NA", "**", "*"),
+  skip = 1,
+  col_names = c(
+    "Cancer",
+    "Sex",
+    "Case_Count",
+    "Population",
+    "Age_Adj_Rate",
+    "95CI_min",
+    "95CI_max"
+  ),
+  col_types = cols(
+    Cancer = col_factor(),
+    Sex = col_factor(),
+    Case_Count = col_number(),
+    Population = col_number(),
+    Age_Adj_Rate = col_number(),
+    "95CI_min" = col_number(),
+    "95CI_max" = col_number()
+  ),
 )
 
 # add variables to define dataset
@@ -327,26 +327,26 @@ makeCodebook(pima_incidence_by_cancer, file = "data/tidy/codebook_azdhs_pima_inc
 
 # read data
 pima_incidence_by_race <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_race.csv",
-                                     na = c("", "NA", "**", "*"),
-                                     skip = 1,
-                                     col_names = c(
-                                       "Race",
-                                       "Sex",
-                                       "Case_Count",
-                                       "Population",
-                                       "Age_Adj_Rate",
-                                       "95CI_min",
-                                       "95CI_max"
-                                     ),
-                                     col_types = cols(
-                                       Race = col_factor(),
-                                       Sex = col_factor(),
-                                       Case_Count = col_number(),
-                                       Population = col_number(),
-                                       Age_Adj_Rate = col_number(),
-                                       "95CI_min" = col_number(),
-                                       "95CI_max" = col_number()
-                                     ),
+  na = c("", "NA", "**", "*"),
+  skip = 1,
+  col_names = c(
+    "Race",
+    "Sex",
+    "Case_Count",
+    "Population",
+    "Age_Adj_Rate",
+    "95CI_min",
+    "95CI_max"
+  ),
+  col_types = cols(
+    Race = col_factor(),
+    Sex = col_factor(),
+    Case_Count = col_number(),
+    Population = col_number(),
+    Age_Adj_Rate = col_number(),
+    "95CI_min" = col_number(),
+    "95CI_max" = col_number()
+  ),
 )
 
 # add variables to define dataset
@@ -365,10 +365,10 @@ write_rds(pima_incidence_by_race, "data/tidy/azdhs_pima_2013-2017_incidence_by_r
 makeCodebook(pima_incidence_by_race, file = "data/tidy/codebook_azdhs_pima_incidence_2013-2017_by_cancer.Rmd")
 
 # pima county by sex ----
-# see above 
+# see above
 pima_incidence_by_cancer
 
-# pima county by age ---- 
+# pima county by age ----
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Count of Incident Cancer
 # Module	Arizona Cancer Registry Query Module
@@ -383,18 +383,18 @@ pima_incidence_by_cancer
 
 # read data
 pima_incidence_by_age <- read_csv("data/raw/AZDHS/query_pima_incidence_2013-2017_by_age.csv",
-                                  na = c("", "NA", "**", "*"),
-                                  skip = 1,
-                                  col_names = c(
-                                    "Age_Group",
-                                    "Sex",
-                                    "Case_Count"
-                                  ),
-                                  col_types = cols(
-                                    "Age_Group" = col_factor(ordered = TRUE),
-                                    "Sex" = col_factor(ordered = TRUE),
-                                    "Case_Count" = col_number()
-                                  ),
+  na = c("", "NA", "**", "*"),
+  skip = 1,
+  col_names = c(
+    "Age_Group",
+    "Sex",
+    "Case_Count"
+  ),
+  col_types = cols(
+    "Age_Group" = col_factor(ordered = TRUE),
+    "Sex" = col_factor(ordered = TRUE),
+    "Case_Count" = col_number()
+  ),
 )
 
 # add variables to define dataset
@@ -410,7 +410,7 @@ pima_incidence_by_age$Sex <- fct_recode(pima_incidence_by_age$Sex, "Male and Fem
 write_rds(pima_incidence_by_age, "data/tidy/azdhs_pima_2013-2017_incidence_by_age.rds")
 
 
-# pima county incidence rates over time ---- 
+# pima county incidence rates over time ----
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
 # Module	Arizona Cancer Registry Query Module
@@ -424,26 +424,26 @@ write_rds(pima_incidence_by_age, "data/tidy/azdhs_pima_2013-2017_incidence_by_ag
 
 # read data
 pima_incidence_by_year <- read_csv("data/raw/AZDHS/query_pima_incidence_1995-2017_by_year.csv",
-                                  na = c("", "NA", "**", "*"),
-                                  skip = 1,
-                                  col_names = c(
-                                    "Year",
-                                    "Sex",
-                                    "Case_Count",
-                                    "Population",
-                                    "Age_Adj_Rate",
-                                    "95CI_min",
-                                    "95CI_max"
-                                  ),
-                                  col_types = cols(
-                                    "Year" = col_factor(ordered = TRUE),
-                                    "Sex" = col_factor(),
-                                    "Case_Count" = col_number(),
-                                    "Population" = col_number(),
-                                    "Age_Adj_Rate" = col_number(),
-                                    "95CI_min" = col_number(),
-                                    "95CI_max" = col_number()
-                                  ),
+  na = c("", "NA", "**", "*"),
+  skip = 1,
+  col_names = c(
+    "Year",
+    "Sex",
+    "Case_Count",
+    "Population",
+    "Age_Adj_Rate",
+    "95CI_min",
+    "95CI_max"
+  ),
+  col_types = cols(
+    "Year" = col_factor(ordered = TRUE),
+    "Sex" = col_factor(),
+    "Case_Count" = col_number(),
+    "Population" = col_number(),
+    "Age_Adj_Rate" = col_number(),
+    "95CI_min" = col_number(),
+    "95CI_max" = col_number()
+  ),
 )
 
 # add variables to define dataset
