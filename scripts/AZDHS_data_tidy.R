@@ -408,3 +408,53 @@ pima_incidence_by_age$Sex <- fct_recode(pima_incidence_by_age$Sex, "Male and Fem
 
 # save dataset to file
 write_rds(pima_incidence_by_age, "data/tidy/azdhs_pima_2013-2017_incidence_by_age.rds")
+
+
+# pima county incidence rates over time ---- 
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Thu, Jul 9, 2020 9:38 AM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996, 1995
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Breast In Situ, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander
+# County Filter	County, Pima
+# Data Grouped By	Year, Sex
+
+# read data
+pima_incidence_by_year <- read_csv("data/raw/AZDHS/query_pima_incidence_1995-2017_by_year.csv",
+                                  na = c("", "NA", "**", "*"),
+                                  skip = 1,
+                                  col_names = c(
+                                    "Year",
+                                    "Sex",
+                                    "Case_Count",
+                                    "Population",
+                                    "Age_Adj_Rate",
+                                    "95CI_min",
+                                    "95CI_max"
+                                  ),
+                                  col_types = cols(
+                                    "Year" = col_factor(ordered = TRUE),
+                                    "Sex" = col_factor(),
+                                    "Case_Count" = col_number(),
+                                    "Population" = col_number(),
+                                    "Age_Adj_Rate" = col_number(),
+                                    "95CI_min" = col_number(),
+                                    "95CI_max" = col_number()
+                                  ),
+)
+
+# add variables to define dataset
+pima_incidence_by_year <- pima_incidence_by_year %>%
+  filter(Year != "All") %>%
+  mutate(
+    Cancer = "All Cancers Combined",
+    Race = "All Races Combined"
+  )
+
+pima_incidence_by_year$Sex <- fct_recode(pima_incidence_by_year$Sex, "Male and Female" = "All")
+
+# save dataset to file
+write_rds(pima_incidence_by_year, "data/tidy/azdhs_pima_1995-2017_incidence_by_year.rds")
