@@ -335,3 +335,28 @@ pima_incidence_by_age %>%
        x = "New Cases",
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
+
+# pima incidence over time by year ----
+# read data
+pima_incidence_by_year <- read_rds("data/tidy/azdhs_pima_1995-2017_incidence_by_year.rds")
+
+# show top five by table
+pima_incidence_by_year %>%
+  group_by(Sex) %>%
+  arrange(Year) %>%
+  select(Year, Sex, Age_Adj_Rate) %>%
+  kable(col.names = c("Year", "Sex", "Age Adjusted Incidence Rate per 100,000"),
+        caption = "Age adjusted incidence rate of all cancers combined for years from 1995-2017; grouped by sex")
+
+# show top five as plot 
+pima_incidence_by_year %>%
+  ggplot(mapping = aes(y = Age_Adj_Rate, x = Year, group = Sex, color = Sex)) +
+  geom_line() +
+  theme_solarized() +
+  ylim(c(200, 600)) +
+  theme(legend.position = "bottom") +
+  labs(title = "Age Adjusted Incidence Rate of New Cancers in Pima County, AZ",
+       subtitle = "1995-2017; All races combined; Grouped by sex",
+       x = "Year",
+       y = "Age Adjusted Incidence Rate per 100,000",
+       caption = "Source: Arizona Cancer Registry Query Module")

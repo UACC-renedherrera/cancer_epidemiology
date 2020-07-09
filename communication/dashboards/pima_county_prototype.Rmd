@@ -81,8 +81,22 @@ plot_pima_incidence_by_age <- pima_incidence_by_age %>%
 
 # incidence by sex over time
 # read data
+# pima incidence over time by year ----
+# read data
+pima_incidence_by_year <- read_rds("data/tidy/azdhs_pima_1995-2017_incidence_by_year.rds")
 
-# show plot
+# show plot 
+plot_pima_incidence_by_year <- pima_incidence_by_year %>%
+  ggplot(mapping = aes(y = Age_Adj_Rate, x = Year, group = Sex, color = Sex)) +
+  geom_line() +
+  theme_solarized() +
+  ylim(c(200, 600)) +
+  theme(legend.position = "bottom") +
+  labs(title = "Age Adjusted Incidence Rate of New Cancers in Pima County, AZ",
+       subtitle = "1995-2017; All races combined; Grouped by sex",
+       x = "Year",
+       y = "Age Adjusted Incidence Rate per 100,000",
+       caption = "Source: Arizona Cancer Registry Query Module")
 
 
 # mortality by cancer and sex
@@ -232,7 +246,9 @@ The Arizona Department of Health Services (ADHS) Indicator Based Information Sys
 ### Age adjusted incidence rates by year for Pima County, AZ
 
 
-... in progress ...
+```{r incidence_by_year}
+ggplotly(plot_pima_incidence_by_year)
+```
 
 
 *** 
