@@ -304,3 +304,34 @@ pima_incidence_by_race %>%
        x = "Age Adjusted Incidence Rate per 100,000",
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
+
+# pima incidence by age ----
+# read data
+pima_incidence_by_age <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_age.rds")
+
+# show top five by table
+pima_incidence_by_age %>%
+  filter(Age_Group != "All") %>%
+  group_by(Sex) %>%
+  arrange(desc(Case_Count)) %>%
+  slice(1:5) %>%
+  select(Year, Cancer, Age_Group, Sex, Case_Count) %>%
+  kable(col.names = c("Year", "Cancer", "Age Group", "Sex", "Cases"),
+        caption = "Highest number of cases for each age group; grouped by sex; for Pima County, AZ; Most recent five year average (2013-2017); All races")
+
+# show top five as plot 
+pima_incidence_by_age %>%
+  filter(Age_Group != "All") %>%
+  group_by(Sex) %>%
+  arrange(desc(Case_Count)) %>%
+  slice(1:5) %>%
+  ggplot(mapping = aes(y = reorder(Age_Group, Case_Count), x = Case_Count)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  facet_wrap("Sex") +
+  theme_solarized() +
+  theme(legend.position = "bottom") +
+  labs(title = "Age Groups with Highest Number of New Cancer Cases",
+       subtitle = "2013-2017; All races; Grouped by sex",
+       x = "New Cases",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
