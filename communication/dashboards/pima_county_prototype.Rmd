@@ -5,6 +5,7 @@ output:
     storyboard: true
     social: menu
     theme: journal
+    source: embed
 ---
 
 
