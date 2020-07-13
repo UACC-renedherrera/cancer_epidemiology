@@ -45,3 +45,4 @@ data/tidy
 # communication folder
 communication/reports
 communication/dashboards/*.html
+communication/dashboards/rsconnect/
