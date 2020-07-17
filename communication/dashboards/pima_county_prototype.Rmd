@@ -53,8 +53,8 @@ plot_pima_incidence_by_race <-  pima_incidence_by_race %>%
   facet_wrap("Race") +
   theme_solarized() +
   theme(legend.position = "bottom") +
-  labs(title = "Top 5 Incident Cancer for Pima County, AZ",
-       subtitle = "2013-2017; All races; Grouped by race and sex",
+  labs(title = "Comparison of Rates of New Cancer for each Race and Sex",
+       subtitle = "2013-2017",
        x = "Age Adjusted Incidence Rate per 100,000",
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
@@ -139,7 +139,7 @@ plot_pima_mortality_by_race <- pima_mortality_by_race %>%
   group_by(race, sex) %>%
   ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(sex, age_adjusted_rate), fill = sex)) +
   geom_col(position = "dodge", alpha = 0.8) +
-  labs(title = "Top 5 Cancer Deaths in Pima County, AZ",
+  labs(title = "Cancer Deaths by Race and Sex",
        subtitle = "Five year average 2013-2017; All races",
        x = "Age Adjusted Mortality Rate per 100,000",
        y = "",
@@ -195,7 +195,7 @@ The chart shows the top five incident cancers for:
 - female only
 
 
-Data shown is the five year average for years 2013-2017, for all races combined. 
+Data shown are the 5 most common new cancers for each sex, shown as a five year average age adjusted incident rate for years 2013-2017, for all races combined.
 
 
 Source: 
@@ -204,7 +204,7 @@ Source:
 The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
-### New Cancers for Pima County, AZ grouped by race and by sex
+### Comparing new cancers for each race and sex in Pima County, AZ
 
 
 ```{r incidence_by_race}
@@ -215,7 +215,7 @@ ggplotly(plot_pima_incidence_by_race)
 *** 
 
 
-The chart shows the five year average (2013-2017) of incident cancer for each race in Pima County, AZ grouped by sex. 
+The chart shows the five year average (2013-2017) of incident cancer for each race in Pima County, AZ grouped by sex. Differences in rates between racial groups show possible disparities in screening or access to care.
 
 
 Data source: 
@@ -224,7 +224,7 @@ Data source:
 The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
-### Age adjusted incidence rates by age for Pima County, AZ
+### Age groups with highest number of new cancer cases in Pima County, AZ
 
 
 ```{r incidence_by_age}
@@ -235,7 +235,7 @@ ggplotly(plot_pima_incidence_by_age)
 *** 
 
 
-This panel shows a graph of the age groups with the highest number of new cases for the five year period from 2013 - 2017; for Pima County, AZ.
+This panel shows a graph of the age groups with the highest number of new cases for the five year period from 2013 - 2017; for Pima County, AZ. 
 
 
 Data source: 
@@ -244,7 +244,7 @@ Data source:
 The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH) system allows the public to query cancer rates, mortality rates and population estimates for Arizona. These public health data sets are intended to support evidenced-based decision making in Arizona to plan and improve service delivery, evaluate health care systems, and inform policy decisions. Other uses are not permissible. Available at [http://healthdata.az.gov/](http://healthdata.az.gov/query/module_selection/azcr/AzCRSelection.html)
 
 
-### Age adjusted incidence rates by year for Pima County, AZ
+### Changes in rates of new cancer over time for Pima County, AZ
 
 
 ```{r incidence_by_year}
@@ -255,7 +255,12 @@ ggplotly(plot_pima_incidence_by_year)
 *** 
 
 
-This panel shows a graph of the age adjusted incidence rates by for Pima County, AZ over time 
+This panel shows a graph of the age adjusted incidence rates by for Pima County, AZ over time. Starting from year 1995 through 2017 data provided by ADHS indicates a downward trend in new cancer diagnoses. This may be indicative of:
+
+
+- changes in demographics
+- changes in health behavior
+- changes in cancer screening behavior
 
 
 Data source: 
@@ -276,7 +281,7 @@ ggplotly(plot_pima_mortality_by_cancer)
 *** 
 
 
-This panel shows a graph of the top 5 cancer deaths for Pima County, AZ
+This panel shows a graph of the top 5 cancer deaths for Pima County, AZ for each sex. 
 
 
 Data source: 
@@ -296,7 +301,7 @@ ggplotly(plot_pima_mortality_by_race)
 *** 
 
 
-This panel shows a graph of the cancer deaths for Pima County, AZ grouped by race and sex.
+This panel shows a graph of the cancer deaths for Pima County, AZ for each race and sex but does not distinguish between Hispanic or non-Hispanic ethnicity, i.e. these rates include both Hispanic and non-Hispanic. 
 
 
 Data source: 
@@ -316,7 +321,7 @@ ggplotly(plot_pima_mortality_by_age)
 ***
 
 
-The age groups with the highest number of cancer deaths in Pima County, AZ; presented as an age adjusted rate 
+The age groups with the highest number of cancer deaths in Pima County, AZ; presented as an age adjusted rate.
 
 
 Data source: 
@@ -328,37 +333,49 @@ Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)
 ### Cancer Deaths Over Time in Pima County, AZ
 
 
-... in progress ...
+Cancer mortality data is not available for each year.
 
 
 ***
 
 
-Describe the visualization 
+No data available.
 
 
 ### Population Demographics: Total population in Pima County 
 
 
-... in progress ...
+<iframe src="https://statisticaldatasets-data-planet-com.ezproxy2.library.arizona.edu/dataplanet/embed?view=UEJgY3iWXPZEaXW2YTM4cY_TEXw=" width="960" height="569"></iframe>
 
 
 ***
 
 
-Describe the visualization
+The panel shows total population for Pima County for each racial and ethnic category; all sexes combined. 
 
 
-### Population Demographics: Sex and Age 
+Data is aggregated by Data Planet and sourced from the US Census Bureau.
 
 
-... in progress ...
+Source: United States Census Bureau (2020). American Community Survey Summary File: 5-Year Estimates, 2014-2018: B01001. Sex by Age by Race and Ethnicity | State: Arizona | Demographic Indicator: Total: | Race/Ethnicity*: White Alone, Black or African American Alone, American Indian or Alaskan Native Alone, Asian Alone, Native Hawaiian or Other Pacific Islander Alone, White Alone, Not Hispanic or Latino, Hispanic or Latino, 2018. Data Planet™ Statistical Datasets: A SAGE Publishing Resource. (Dataset). Dataset-ID:  001-068-551. https://doi-org.ezproxy2.library.arizona.edu/10.6068/DP173530C65C915
+
+
+### Population Demographics: Sex 
+
+
+<iframe src="https://statisticaldatasets-data-planet-com.ezproxy2.library.arizona.edu/dataplanet/embed?view=_k$zLCmg9xaWEPY4aPeNcZi35IY=" width="960" height="569"></iframe>
 
 
 ***
 
 
-Describe the visualization
+Displays the total population for Pima County, AZ grouped into either male or female sex.
+
+
+Data is aggregated by Data Planet and sourced from the US Census Bureau.
+
+
+Source: United States Census Bureau (2020). American Community Survey Summary File: 5-Year Estimates, 2014-2018: B01001. Sex by Age | State: Arizona | Demographic Indicator: Male:, Female:, 2018. Data Planet™ Statistical Datasets: A SAGE Publishing Resource. (Dataset). Dataset-ID:  001-068-003. https://doi-org.ezproxy2.library.arizona.edu/10.6068/DP1735310E93D16
 
 
 ### Population Demographics: Sex and Race 
@@ -373,28 +390,37 @@ Describe the visualization
 Describe the visualization
 
 
-### Population Demographics: Education 
+### Population Demographics: Educational Attainment
 
 
-... in progress ...
+<iframe src="https://statisticaldatasets-data-planet-com.ezproxy2.library.arizona.edu/dataplanet/embed?view=zW8RAju2twHEwlG8IJRevtehvs8=" width="960" height="569"></iframe>
 
 
 ***
 
 
-Describe the visualization
+Chart shows the number of people in Pima County, AZ with a high school diploma equivalent or greater.
+
+
+Data is aggregated by Data Planet and sourced from the US Census Bureau.
+
+
+Source: United States Census Bureau (2020). American Community Survey Summary File: 5-Year Estimates, 2014-2018: B01001. Sex by Age | State: Arizona | Demographic Indicator: Male:, Female:, 2018. Data Planet™ Statistical Datasets: A SAGE Publishing Resource. (Dataset). Dataset-ID:  001-068-003. https://doi-org.ezproxy2.library.arizona.edu/10.6068/DP1735310E93D16
 
 
 ### Population Demographics: Income 
 
 
-... in progress ...
+<iframe src="https://statisticaldatasets-data-planet-com.ezproxy2.library.arizona.edu/dataplanet/embed?view=5dx3rNZ1u$69i_ToqGXqF3w1G9E=" width="960" height="569"></iframe>
 
 
 ***
 
 
-Describe the visualization
+This shows mean household income distributed into five classes. The United States Census Bureau divides households into five equal parts (quintiles) based on household income. Reported here is the mean household income of each quintile and of the top 5% of households. This measure represents an arithmetic average of household income in each quintile. Household income includes the income of the householder and all other individuals 15 years old and over in the household, whether they are related to the householder or not.
+
+
+United States Census Bureau (2020). American Community Survey Summary File: 5-Year Estimates, 2014-2018: B19081. Mean Household Income of Quintiles | State: Arizona | Demographic Indicator: Lowest Quintile, Second Quintile, Third Quintile, Fourth Quintile, Highest Quintile, 2018. Data Planet™ Statistical Datasets: A SAGE Publishing Resource. (Dataset). Dataset-ID:  001-068-288. https://doi-org.ezproxy2.library.arizona.edu/10.6068/DP173531BA11219
 
 
 ### Screening:
@@ -406,7 +432,7 @@ Describe the visualization
 ***
 
 
-Describe the visualization
+...
 
 
 ### Health Behavior
@@ -418,6 +444,6 @@ Describe the visualization
 ***
 
 
-Describe the visualization
+...
 
 
