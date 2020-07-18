@@ -32,3 +32,9 @@ National Program of Cancer Registries and Surveillance, Epidemiology, and End Re
 
 
 Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov) SEER*Stat Database: Mortality - All COD, Aggregated With County, Total U.S. (1990-2017) <Katrina/Rita Population Adjustment> - Linked To County Attributes - Total U.S., 1969-2018 Counties, National Cancer Institute, DCCPS, Surveillance Research Program, released December 2019.  Underlying mortality data provided by NCHS (https://www.cdc.gov/nchs/).
+
+
+## Examples of R Markdown Reports and Dashboards
+
+
+On RPubs: https://rpubs.com/UAZCC_Rene 
