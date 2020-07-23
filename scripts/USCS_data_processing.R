@@ -835,3 +835,29 @@ by_az_county %>%
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
   ) +
   theme_solarized()
+
+# pima county ----
+# white ----
+
+by_az_county %>% select(RACE) %>% distinct()
+
+by_az_county %>%
+  filter(AREA == "Pima",
+         EVENT_TYPE == "Incidence",
+         SEX == "Male and Female",
+         SITE != "All Cancer Sites Combined",
+         SITE != "Male and Female Breast, <i>in situ</i>",
+         RACE == "White") %>%
+  arrange(desc(AGE_ADJUSTED_RATE)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(y = reorder(SITE, AGE_ADJUSTED_RATE), x = AGE_ADJUSTED_RATE)) +
+  geom_col() +
+  geom_label(aes(label = AGE_ADJUSTED_RATE), nudge_x = 5) +
+  xlim(c(0,150)) +
+  theme_calc() +
+  labs(title = "Incident Cancer for White Race Only",
+       subtitle = "2013-2017; Both sexes combined",
+       x = "Age Adjusted Incidence Rate per 100,000",
+       y = "",
+       caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics Public Use Research Database, 2019 submission (2001–2017), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2020. Available at www.cdc.gov/cancer/uscs/public-use.")
+  

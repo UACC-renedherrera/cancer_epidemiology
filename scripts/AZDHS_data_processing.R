@@ -276,6 +276,26 @@ pima_incidence_by_cancer %>%
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
 
+pima_incidence_by_cancer %>%
+  group_by(Sex) %>%
+  filter(Cancer != "All",
+         Cancer != "Other Invasive",
+         Cancer != "Breast In Situ",
+         Sex == "Male and Female") %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
+  geom_col(position = "dodge") +
+  geom_label(aes(label = Age_Adj_Rate), nudge_x = 5) +
+  xlim(c(0,100)) +
+  theme_classic() +
+  theme(legend.position = "bottom") +
+  labs(title = "Top 5 Incident Cancers for Pima County, AZ",
+       subtitle = "2013-2017; All races combined; Both sexes combined",
+       x = "Age Adjusted Rate per 100,000",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
 # pima incidence by race ----
 # read data
 pima_incidence_by_race <- read_rds("data/tidy/azdhs_pima_2013-2017_incidence_by_race.rds")
@@ -301,6 +321,20 @@ pima_incidence_by_race %>%
   theme(legend.position = "bottom") +
   labs(title = "Top 5 Incident Cancer for Pima County, AZ",
        subtitle = "2013-2017; All races; Grouped by race and sex",
+       x = "Age Adjusted Incidence Rate per 100,000",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
+pima_incidence_by_race %>%
+  filter(Sex == "Male and Female") %>%
+  group_by(Race) %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(y = reorder(Race, Age_Adj_Rate), x = Age_Adj_Rate)) +
+  geom_col() +
+  theme_bw() +
+  labs(title = "Comparing Cancer Incidence Rates for Each Race",
+       subtitle = "2013-2017; Both sexes combined; All cancers combined",
        x = "Age Adjusted Incidence Rate per 100,000",
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
@@ -336,6 +370,20 @@ pima_incidence_by_age %>%
        y = "",
        caption = "Source: Arizona Cancer Registry Query Module")
 
+pima_incidence_by_age %>%
+  filter(Age_Group != "All",
+         Sex == "Male and Female") %>%
+  arrange(desc(Case_Count)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(y = reorder(Age_Group, Case_Count), x = Case_Count)) +
+  geom_col() +
+  theme_economist() +
+  labs(title = "Cancer Incidence by Age",
+       subtitle = "2013-2017; All races combined",
+       x = "Cases",
+       y = "",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
 # pima incidence over time by year ----
 # read data
 pima_incidence_by_year <- read_rds("data/tidy/azdhs_pima_1995-2017_incidence_by_year.rds")
@@ -358,5 +406,17 @@ pima_incidence_by_year %>%
   labs(title = "Age Adjusted Incidence Rate of New Cancers in Pima County, AZ",
        subtitle = "1995-2017; All races combined; Grouped by sex",
        x = "Year",
+       y = "Age Adjusted Incidence Rate per 100,000",
+       caption = "Source: Arizona Cancer Registry Query Module")
+
+pima_incidence_by_year %>%
+  filter(Sex == "Male and Female") %>%
+  ggplot(mapping = aes(y = Age_Adj_Rate, x = Year, group = Sex)) +
+  geom_line(size = 2) +
+  theme_excel() +
+  ylim(c(100, 500)) +
+  labs(title = "Age Adjusted Cancer Incidence Rate",
+       subtitle = "1995-2017; All races combined; Both sexes combined",
+       x = "Year: 1995 - 2017",
        y = "Age Adjusted Incidence Rate per 100,000",
        caption = "Source: Arizona Cancer Registry Query Module")
