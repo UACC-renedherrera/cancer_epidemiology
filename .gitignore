@@ -46,3 +46,9 @@ data/tidy
 communication/reports
 communication/dashboards/*.html
 communication/dashboards/rsconnect/
+
+# file types to ignore
+*.ppt
+*.pptx
+*.docx
+*.html
