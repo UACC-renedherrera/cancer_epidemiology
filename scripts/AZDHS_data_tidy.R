@@ -67,7 +67,8 @@ azdhs_catch_incidence_2016 <- azdhs_catch_incidence_2016 %>%
   mutate(
     Year = "2012-2016",
     Race = "All Races"
-  )
+  ) %>%
+  drop_na()
 
 # save dataset to file
 write_rds(azdhs_catch_incidence_2016, "data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
