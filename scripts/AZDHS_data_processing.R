@@ -420,3 +420,20 @@ pima_incidence_by_year %>%
        x = "Year: 1995 - 2017",
        y = "Age Adjusted Incidence Rate per 100,000",
        caption = "Source: Arizona Cancer Registry Query Module")
+
+# Incidence for UAZCC Characterization catchment ----
+incidence_catch <- read_rds("data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
+
+# rank order cancer descending by age adj rate
+incidence_catch_for_UAZCC <- incidence_catch %>%
+  drop_na() %>%
+  filter(Sex == "All",
+         Cancer != "Other Invasive",
+         Cancer != "Breast In Situ") %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  select(Cancer, Age_Adj_Rate) 
+
+incidence_catch_for_UAZCC %>%
+  kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
+        caption = "Source: Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH)",
+        lable = "Cancer Incidence, UAZCC Catchment, 2012-2016")

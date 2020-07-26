@@ -861,3 +861,51 @@ by_az_county %>%
        y = "",
        caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics Public Use Research Database, 2019 submission (2001–2017), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2020. Available at www.cdc.gov/cancer/uscs/public-use.")
   
+# Incidence for UAZCC Characterization USA ----
+incidence_USA <- read_rds("data/tidy/USCS_by_cancer.rds")
+
+incidence_USA_for_UAZCC <- incidence_USA %>%
+  drop_na() %>%
+  filter(YEAR == "2012-2016",
+         RACE == "All Races",
+         SEX == "Male and Female",
+         EVENT_TYPE == "Incidence",
+         SITE != "All Sites (comparable to ICD-O-2)",
+         SITE != "Male and Female Breast",
+         SITE != "Male and Female Breast, <i>in situ</i>",
+         SITE != "Female Breast, <i>in situ</i>") %>%
+  arrange(desc(AGE_ADJUSTED_RATE)) %>%
+  select(SITE, "USA_AGE_ADJUSTED_RATE" = AGE_ADJUSTED_RATE)
+
+incidence_USA_for_UAZCC %>%
+  kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
+        caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.",
+        lable = "Cancer Incidence, USA, 2012-2016")
+
+# Incidence for UAZCC Characterization AZ ----
+incidence_AZ <- read_rds("data/tidy/USCS_by_state.rds")
+
+incidence_AZ_for_UAZCC <- incidence_AZ %>%
+  drop_na() %>%
+  filter(AREA == "Arizona",
+         YEAR == "2012-2016",
+         RACE == "All Races",
+         SEX == "Male and Female",
+         EVENT_TYPE == "Incidence",
+         SITE != "All Sites (comparable to ICD-O-2)",
+         SITE != "Male and Female Breast",
+         SITE != "Male and Female Breast, <i>in situ</i>",
+         SITE != "Female Breast, <i>in situ</i>") %>%
+  arrange(desc(AGE_ADJUSTED_RATE)) %>%
+  select(SITE, "AZ_AGE_ADJUSTED_RATE" = AGE_ADJUSTED_RATE)
+
+incidence_AZ_for_UAZCC %>%
+  kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
+        caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.",
+        lable = "Cancer Incidence, AZ, 2012-2016")
+
+# combine both USA and AZ age adjusted rate tables 
+combined_incidence_USA_AZ_for_UAZCC <- full_join(incidence_USA_for_UAZCC, incidence_AZ_for_UAZCC) %>% 
+  arrange(desc(AZ_AGE_ADJUSTED_RATE, USA_AGE_ADJUSTED_RATE)) 
+
+combined_incidence_USA_AZ_for_UAZCC %>% kable()
