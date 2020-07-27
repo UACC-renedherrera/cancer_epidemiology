@@ -864,6 +864,8 @@ by_az_county %>%
 # Incidence for UAZCC Characterization USA ----
 incidence_USA <- read_rds("data/tidy/USCS_by_cancer.rds")
 
+levels(incidence_USA$YEAR)
+
 incidence_USA_for_UAZCC <- incidence_USA %>%
   drop_na() %>%
   filter(YEAR == "2012-2016",

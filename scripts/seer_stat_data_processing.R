@@ -6,6 +6,7 @@ library(here)
 library(tidyverse)
 library(knitr)
 library(ggthemes)
+library(knitr)
 
 # read dataset mortality ----
 catchment_mortality <- read_rds("data/tidy/seer_stat_catchment_mortality_2013-2017.rds")
@@ -175,3 +176,54 @@ pima_mortality_by_age %>%
        caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)") +
   theme_solarized() +
   theme(legend.position = "bottom")
+
+# mortality for usa ---- 
+
+cancers_to_exclude <- c("Digestive System",
+                        "Respiratory System",
+                        "Male Genital System",
+                        "Urinary System",
+                        "Female Genital System",
+                        "Liver")
+
+mortality_usa_by_cancer <- read_rds("data/tidy/seer_mortality_usa_by_cancer_2014-2018_all_race_all_sex.rds")
+
+mortality_usa_by_cancer_for_uazcc <- mortality_usa_by_cancer %>%
+  filter(!(cancer %in% cancer_to_exclude)) %>%
+  select(cancer, usa_age_adjusted_rate)
+
+# mortality for uazcc AZ ----
+mortality_az_by_cancer_for_UAZCC <- read_rds("data/tidy/seer_mortality_AZ_all_race_all_sex_2014-2018_by_cancer.rds")
+
+cancers_to_exclude <- c("Digestive System",
+                       "Respiratory System",
+                       "Male Genital System",
+                       "Urinary System",
+                       "Female Genital System",
+                       "Liver")
+
+mortality_az_by_cancer_for_UAZCC <- mortality_az_by_cancer_for_UAZCC %>%
+  filter(!(cancer %in% cancer_to_exclude)) %>%
+  select(cancer,
+         "AZ_age_adjusted_rate" = age_adjusted_rate)
+
+# mortality for UAZCC AZ catchment ---- 
+mortality_az_catch_by_cancer_for_UAZCC <- read_rds("data/tidy/mortality_az_catch_by_cancer_for_UAZCC_2014-2018_all_race_all_sex.rds")
+
+mortality_az_catch_by_cancer_for_UAZCC <- mortality_az_catch_by_cancer_for_UAZCC %>%
+  filter(!(cancer %in% cancer_to_exclude)) %>%
+  select(cancer,
+         "Catch_age_adjusted_rate" = age_adjusted_rate) 
+
+combined_mortality_AZ_catch_for_UAZCC <- full_join(mortality_az_by_cancer_for_UAZCC, mortality_az_catch_by_cancer_for_UAZCC) 
+
+combined_mortality_for_uazcc <- full_join(combined_mortality_AZ_catch_for_UAZCC, mortality_usa_by_cancer_for_uazcc) %>% 
+  arrange(desc(Catch_age_adjusted_rate, AZ_age_adjusted_rate)) 
+
+combined_mortality_for_uazcc <- combined_mortality_for_uazcc %>% 
+  select(cancer, usa_age_adjusted_rate, AZ_age_adjusted_rate, Catch_age_adjusted_rate) %>% 
+  arrange(desc(Catch_age_adjusted_rate, AZ_age_adjusted_rate, usa_age_adjusted_rate)) %>%
+  drop_na() 
+
+combined_mortality_for_uazcc %>%
+  kable()
