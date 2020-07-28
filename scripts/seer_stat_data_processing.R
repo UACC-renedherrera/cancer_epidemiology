@@ -189,7 +189,7 @@ cancers_to_exclude <- c("Digestive System",
 mortality_usa_by_cancer <- read_rds("data/tidy/seer_mortality_usa_by_cancer_2014-2018_all_race_all_sex.rds")
 
 mortality_usa_by_cancer_for_uazcc <- mortality_usa_by_cancer %>%
-  filter(!(cancer %in% cancer_to_exclude)) %>%
+  filter(!(cancer %in% cancers_to_exclude)) %>%
   select(cancer, usa_age_adjusted_rate)
 
 # mortality for uazcc AZ ----
@@ -203,7 +203,7 @@ cancers_to_exclude <- c("Digestive System",
                        "Liver")
 
 mortality_az_by_cancer_for_UAZCC <- mortality_az_by_cancer_for_UAZCC %>%
-  filter(!(cancer %in% cancer_to_exclude)) %>%
+  filter(!(cancer %in% cancers_to_exclude)) %>%
   select(cancer,
          "AZ_age_adjusted_rate" = age_adjusted_rate)
 
@@ -211,7 +211,7 @@ mortality_az_by_cancer_for_UAZCC <- mortality_az_by_cancer_for_UAZCC %>%
 mortality_az_catch_by_cancer_for_UAZCC <- read_rds("data/tidy/mortality_az_catch_by_cancer_for_UAZCC_2014-2018_all_race_all_sex.rds")
 
 mortality_az_catch_by_cancer_for_UAZCC <- mortality_az_catch_by_cancer_for_UAZCC %>%
-  filter(!(cancer %in% cancer_to_exclude)) %>%
+  filter(!(cancer %in% cancers_to_exclude)) %>%
   select(cancer,
          "Catch_age_adjusted_rate" = age_adjusted_rate) 
 
@@ -227,3 +227,97 @@ combined_mortality_for_uazcc <- combined_mortality_for_uazcc %>%
 
 combined_mortality_for_uazcc %>%
   kable()
+
+# mortality for UAZCC Catchment non-hispanic white ---- 
+mortality_az_catch_by_race <- read_rds("data/tidy/seer_mortality_catch_cancer_by_race.rds")
+
+levels(mortality_az_catch_by_race$cancer)
+
+cancer_to_show <- c(
+  "All Malignant Cancers",
+  "Lung and Bronchus",
+  "Colon and Rectum",
+  "Pancreas",
+  "Colon excluding Rectum",
+  "Breast",
+  "Prostate",
+  "Liver and Intrahepatic Bile Duct",
+  "Lymphoma",
+  "Non-Hodgkin Lymphoma",
+  "Leukemia",
+  "Urinary Bladder",
+  "Brain and Other Nervous System",
+  "Kidney and Renal Pelvis",
+  "Esophagus",
+  "Ovary",
+  "Stomach",
+  "Myeloma",
+  "Myeloid and Monocytic Leukemia",
+  "Skin",
+  "Melanoma of the Skin",
+  "Rectum and Rectosigmoid Junction",
+  "Acute Myeloid Leukemia",
+  "Oral Cavity and Pharynx"
+)
+
+levels(mortality_az_catch_by_race$Ethnicity)
+levels(mortality_az_catch_by_race$Race)
+
+mortality_catch_white <- mortality_az_catch_by_race %>% 
+  filter(cancer %in% cancer_to_show) %>%
+  filter(Ethnicity == "Non-Spanish-Hispanic-Latino",
+         Race == "White") %>%
+  arrange(desc(Age_Adjusted_Rate)) %>%
+  select(cancer, white_Age_Adjusted_Rate = Age_Adjusted_Rate)
+
+mortality_catch_white %>% kable()
+
+# add to attribute table 
+combined_mortality_for_uazcc <- full_join(combined_mortality_for_uazcc, mortality_catch_white)
+
+# mortality for UAZCC Catchment hispanic ---- 
+
+mortality_az_catch_hispanic <- read_rds("data/tidy/seer_mortality_catch_cancer_hispanic.rds")
+
+mortality_az_catch_hispanic <- mortality_az_catch_hispanic %>%
+  filter(Ethnicity == "Spanish-Hispanic-Latino",
+         cancer %in% cancer_to_show) %>%
+  arrange(desc(Age_Adjusted_Rate)) %>%
+  select(cancer, hispanic_Age_Adjusted_Rate = Age_Adjusted_Rate)
+
+mortality_az_catch_hispanic %>% kable()
+
+# add to attribute table 
+combined_mortality_for_uazcc <- full_join(combined_mortality_for_uazcc, mortality_az_catch_hispanic)
+
+# mortality for UAZCC Catchment non-hispanic American Indian  ----  
+
+mortality_catch_AI <- mortality_az_catch_by_race %>% 
+  filter(cancer %in% cancer_to_show) %>%
+  filter(Ethnicity == "Non-Spanish-Hispanic-Latino",
+         Race == "American Indian/Alaska Native") %>%
+  arrange(desc(Age_Adjusted_Rate)) %>%
+  select(cancer, AI_Age_Adjusted_Rate = Age_Adjusted_Rate)
+
+mortality_catch_AI %>% kable()
+
+combined_mortality_for_uazcc <- full_join(combined_mortality_for_uazcc, mortality_catch_AI)
+
+# mortality for UAZCC Catchment non-hispanic Black ---- 
+
+mortality_catch_black <- mortality_az_catch_by_race %>% 
+  filter(cancer %in% cancer_to_show) %>%
+  filter(Ethnicity == "Non-Spanish-Hispanic-Latino",
+         Race == "Black") %>%
+  arrange(desc(Age_Adjusted_Rate)) %>%
+  select(cancer, black_Age_Adjusted_Rate = Age_Adjusted_Rate)
+
+mortality_catch_black %>% kable()
+
+combined_mortality_for_uazcc <- full_join(combined_mortality_for_uazcc, mortality_catch_black)
+
+write_rds(combined_mortality_for_uazcc, "data/tidy/combined_mortality_for_uazcc_attribute_table.rds")
+
+# combine all tables for mortality table ---- 
+
+combined_mortality_for_uazcc %>% kable()
