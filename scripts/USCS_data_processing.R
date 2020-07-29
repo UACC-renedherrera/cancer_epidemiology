@@ -864,13 +864,11 @@ by_az_county %>%
 # Incidence for UAZCC Characterization USA ----
 incidence_USA <- read_rds("data/tidy/USCS_by_cancer.rds")
 
-levels(incidence_USA$YEAR)
-
 incidence_USA_for_UAZCC <- incidence_USA %>%
   drop_na() %>%
   filter(YEAR == "2012-2016",
-         RACE == "All Races",
          SEX == "Male and Female",
+         RACE == "All Races",
          EVENT_TYPE == "Incidence",
          SITE != "All Sites (comparable to ICD-O-2)",
          SITE != "Male and Female Breast",
@@ -909,5 +907,7 @@ incidence_AZ_for_UAZCC %>%
 # combine both USA and AZ age adjusted rate tables 
 combined_incidence_USA_AZ_for_UAZCC <- full_join(incidence_USA_for_UAZCC, incidence_AZ_for_UAZCC) %>% 
   arrange(desc(AZ_AGE_ADJUSTED_RATE, USA_AGE_ADJUSTED_RATE)) 
+
+write_rds(combined_incidence_USA_AZ_for_UAZCC, "data/tidy/USCS_incidence_2012_2016_USA_AZ.rds")
 
 combined_incidence_USA_AZ_for_UAZCC %>% kable()

@@ -425,15 +425,27 @@ pima_incidence_by_year %>%
 incidence_catch <- read_rds("data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
 
 # rank order cancer descending by age adj rate
-incidence_catch_for_UAZCC <- incidence_catch %>%
+
+incidence_catch %>%
   drop_na() %>%
-  filter(Sex == "All",
-         Cancer != "Other Invasive",
+  filter(Cancer != "Other Invasive",
          Cancer != "Breast In Situ") %>%
   arrange(desc(Age_Adj_Rate)) %>%
-  select(Cancer, Age_Adj_Rate) 
+  select(Cancer,
+         Sex,
+         "catch_Age_Adj_Rate" = Age_Adj_Rate) 
 
 incidence_catch_for_UAZCC %>%
   kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
         caption = "Source: Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH)",
         lable = "Cancer Incidence, UAZCC Catchment, 2012-2016")
+
+# read race data from catchment ----
+incidence_catch_white_hisp_AI_black <- read_rds("data/tidy/azdhs_catchment_2012-2016_race_by_cancer.rds")
+
+# combine catch and race data ---- 
+incidence_catch_for_UAZCC <- full_join(incidence_catch_for_UAZCC, incidence_catch_white_hisp_AI_black)
+
+write_rds(incidence_catch_for_UAZCC, "data/tidy/ADHS_incidence_2012_2016_catchment.rds")
+
+incidence_catch_for_UAZCC %>% kable()
