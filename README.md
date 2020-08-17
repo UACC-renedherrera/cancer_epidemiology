@@ -38,3 +38,11 @@ Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)
 
 
 On RPubs: https://rpubs.com/UAZCC_Rene 
+
+## File naming
+
+
+Files saved to data should follow the following pattern, separated by underscore:
+
+
+"event type" _ "geography" _ "data source" _ "year-range" _ "other details"
