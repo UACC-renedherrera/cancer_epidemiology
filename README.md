@@ -37,7 +37,7 @@ Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)
 ## Examples of R Markdown Reports and Dashboards
 
 
-On RPubs: https://rpubs.com/UAZCC_Rene 
+On RPubs: https://rpubs.com/UAZCC_Rene
 
 ## File naming
 
@@ -45,4 +45,4 @@ On RPubs: https://rpubs.com/UAZCC_Rene
 Files saved to data should follow the following pattern, separated by underscore:
 
 
-"event type" _ "geography" _ "data source" _ "year-range" _ "other details"
+```"event type" _ "geography" _ "data source" _ "year-range" _ "other details"```
