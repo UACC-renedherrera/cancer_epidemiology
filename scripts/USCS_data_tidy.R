@@ -16,26 +16,39 @@ library(dataMaid)
 # source citation ----
 # National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.
 
-# download data from source
-# download dataset ----
+# # download data from source
+# # download dataset 2016 ----
+# # set values
+# url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2016-ASCII.zip"
+# path_zip <- "data/raw"
+# path_unzip <- "data/raw/USCS_1999-2016"
+# zip_file <- "USCS_1999-2016_ASCII.zip"
+# # use curl to download
+# curl::curl_download(url, destfile = paste(path_zip, zip_file, sep = "/"))
+# # set value
+# zipped_file <- "data/raw/USCS_1999-2016_ASCII.zip"
+# # unzip to folder
+# unzip(zipped_file, exdir = path_unzip)
+
+# download dataset 2016 ----
 # set values
-url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2016-ASCII.zip"
+url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2017-ASCII.zip"
 path_zip <- "data/raw"
-path_unzip <- "data/raw/USCS_1999-2016"
-zip_file <- "USCS_1999-2016_ASCII.zip"
+path_unzip <- "data/raw/USCS_1999-2017"
+zip_file <- "USCS_1999-2017_ASCII.zip"
 # use curl to download
 curl::curl_download(url, destfile = paste(path_zip, zip_file, sep = "/"))
 # set value
-zipped_file <- "data/raw/USCS_1999-2016_ASCII.zip"
+zipped_file <- "data/raw/USCS_1999-2017_ASCII.zip"
 # unzip to folder
 unzip(zipped_file, exdir = path_unzip)
 
 # read data ----
 # United States Cancer Statistics
-# for years 1999-2016
+# for years 1999-2017
 # by cancer site ----
 
-by_cancer <- read_delim("data/raw/USCS_1999-2016/BYSITE.TXT",
+by_cancer <- read_delim("data/raw/USCS_1999-2017/BYSITE.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", "."),
   col_names = TRUE,
@@ -65,9 +78,9 @@ makeCodebook(by_cancer, file = "data/tidy/codebook_USCS_by_cancer.Rmd")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2016
+# for years 1999-2017
 # by age, race, and ethnicity ----
-by_age <- read_delim("data/raw/USCS_1999-2016/BYAGE.TXT",
+by_age <- read_delim("data/raw/USCS_1999-2017/BYAGE.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -95,9 +108,9 @@ makeCodebook(by_age, file = "data/tidy/codebook_USCS_by_age.Rmd")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2016
+# for years 1999-2017
 # by state and region ----
-by_state <- read_delim("data/raw/USCS_1999-2016/BYAREA.TXT",
+by_state <- read_delim("data/raw/USCS_1999-2017/BYAREA.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -130,9 +143,9 @@ makeCodebook(by_state, file = "data/tidy/codebook_USCS_by_state.Rmd")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2016
+# for years 1999-2017
 # by state and county ----
-by_county <- read_delim("data/raw/USCS_1999-2016/BYAREA_COUNTY.TXT",
+by_county <- read_delim("data/raw/USCS_1999-2017/BYAREA_COUNTY.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -196,14 +209,14 @@ by_age %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   ggplot(mapping = aes(x = RATE, y = reorder(AGE, RATE))) +
   geom_errorbarh(aes(xmin = CI_LOWER, xmax = CI_UPPER)) +
   geom_bar(aes(x = RATE), stat = "identity") +
   labs(
     title = "crude rate of new cancers for USA by age group",
-    subtitle = "years 2012-2016"
+    subtitle = "years 2013-2017"
   )
 
 # mortality
@@ -213,14 +226,14 @@ by_age %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   ggplot(mapping = aes(x = RATE, y = reorder(AGE, RATE))) +
   geom_errorbarh(aes(xmin = CI_LOWER, xmax = CI_UPPER)) +
   geom_bar(aes(x = RATE), stat = "identity") +
   labs(
     title = "crude rate of cancer deaths for USA by age group",
-    subtitle = "years 2012-2016"
+    subtitle = "years 2013-2017"
   )
 
 # explore by_cancer ----
@@ -232,7 +245,7 @@ by_cancer %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:20) %>%
@@ -241,7 +254,7 @@ by_cancer %>%
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity") +
   labs(
     title = "age adjusted rate of new cancers for USA",
-    subtitle = "years 2012-2016, 20 most common cancers"
+    subtitle = "years 2013-2017, 20 most common cancers"
   )
 
 # mortality
@@ -251,7 +264,7 @@ by_cancer %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE != "All Cancer Sites Combined" & SITE != "All Sites (comparable to ICD-O-2)",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:20) %>%
@@ -260,9 +273,8 @@ by_cancer %>%
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity") +
   labs(
     title = "age adjusted rate of new cancer deaths for USA",
-    subtitle = "years 2012-2016, 20 most common cancers"
+    subtitle = "years 2013-2017, 20 most common cancers"
   )
-
 
 
 # mortality
@@ -272,7 +284,7 @@ by_az_county %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   drop_na() %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -281,7 +293,7 @@ by_az_county %>%
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity", alpha = 0.5) +
   labs(
     title = "age adjusted rate of cancer deaths for AZ Counties",
-    subtitle = "years 2012-2016"
+    subtitle = "years 2013-2017"
   )
 
 # compare USA to AZ
@@ -294,7 +306,7 @@ by_state %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   drop_na() %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -303,7 +315,7 @@ by_state %>%
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity", alpha = 0.5) +
   labs(
     title = "age adjusted rate of new cancers for each USA state",
-    subtitle = "years 2012-2016"
+    subtitle = "years 2013-2017"
   )
 
 # mortality
@@ -313,7 +325,7 @@ by_state %>%
     RACE == "All Races",
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   drop_na() %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -322,5 +334,6 @@ by_state %>%
   geom_bar(aes(x = AGE_ADJUSTED_RATE), stat = "identity", alpha = 0.5) +
   labs(
     title = "age adjusted rate of cancer deaths for each USA state",
-    subtitle = "years 2012-2016"
+    subtitle = "years 2013-2017"
   )
+

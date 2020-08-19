@@ -460,7 +460,7 @@ pima_incidence_by_year$Sex <- fct_recode(pima_incidence_by_year$Sex, "Male and F
 # save dataset to file
 write_rds(pima_incidence_by_year, "data/tidy/azdhs_pima_1995-2017_incidence_by_year.rds")
 
-# Incidence AZ ----
+# Incidence AZ 2016 ----
 # Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
 # Wed, Jul 29, 2020 2:56 PM, MST
 # 2016, 2015, 2014, 2013, 2012
@@ -497,6 +497,54 @@ incidence_az <- incidence_az %>%
   arrange(desc(AZ_Age_Adj_Rate)) %>%
   select(Cancer, AZ_Age_Adj_Rate)
 
+# Incidence AZ 2017 ----
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 4:34 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# County Filter	County, Apache, Cochise, Coconino, Gila, Graham, Greenlee, La Paz, Maricopa, Mohave, Navajo, Pima, Pinal, Santa Cruz, Yavapai, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
+incidence_az <- read_csv("data/raw/AZDHS/query_incidence_az_2013-2017.csv",
+                         na = c("", "NA", "**", "*"),
+                         skip = 1,
+                         col_names = c(
+                           "Cancer",
+                           "Sex",
+                           "Case_Count",
+                           "Population",
+                           "AZ_Age_Adj_Rate",
+                           "95CI_min",
+                           "95CI_max"),
+                         col_types = cols(
+                           "Cancer" = col_factor(),
+                           "Sex" = col_factor(),
+                           "Case_Count" = col_number(),
+                           "Population" = col_number(),
+                           "AZ_Age_Adj_Rate" = col_number(),
+                           "95CI_min" = col_number(),
+                           "95CI_max" = col_number()
+                         )
+)
+
+write_rds(incidence_az, "data/tidy/incidence_az_azdhs_2013-2017_by_cancer.rds")
+
+incidence_az <- incidence_az %>%
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  arrange(desc(AZ_Age_Adj_Rate)) %>%
+  mutate(area = "AZ",
+         race = "All") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = AZ_Age_Adj_Rate)
+
 # incidence catchment ---- 
 incidence_catch <- azdhs_catch_incidence_2016 %>%
   filter(Sex == "All") %>%
@@ -504,8 +552,61 @@ incidence_catch <- azdhs_catch_incidence_2016 %>%
   drop_na() %>%
   select(Cancer, catch_Age_Adj_Rate = Age_Adj_Rate)
 
+# incidence rates for catchment by cancer 2017 ----
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 11:22 AM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/Pacific Islander, Other
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
 
-# Incidence catchment non-hispanic white ---- 
+# read data
+# downloaded data as excel from query module
+# copied table to new spreadsheet
+# saved as csv
+azdhs_catch_incidence_2017 <- read_csv("data/raw/AZDHS/query_catchment_incidence_2013-2017.csv",
+                                       na = c("", "NA", "**", "*"),
+                                       skip = 1,
+                                       col_names = c(
+                                         "Cancer",
+                                         "Sex",
+                                         "Case_Count",
+                                         "Population",
+                                         "Age_Adj_Rate",
+                                         "95CI_min",
+                                         "95CI_max"
+                                       ),
+                                       col_types = cols(
+                                         Cancer = col_character(),
+                                         Sex = col_factor(),
+                                         Case_Count = col_number(),
+                                         Population = col_number(),
+                                         Age_Adj_Rate = col_number(),
+                                         "95CI_min" = col_number(),
+                                         "95CI_max" = col_number()
+                                       ),
+)
+
+write_rds(azdhs_catch_incidence_2017, "data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
+
+incidence_catchment <- azdhs_catch_incidence_2017 %>% 
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  arrange(desc(Age_Adj_Rate)) %>%
+  mutate(race = "All",
+         area = "Catchment") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = Age_Adj_Rate)
+
+# Incidence catchment non-hispanic white 2016 ---- 
 # Query Definition	
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
@@ -547,7 +648,55 @@ incidence_catch_white <- incidence_catch_white %>%
   drop_na() %>%
   select(Cancer, catch_white_Age_Adj_Rate)
 
-# Incidence catchment hispanic ---- 
+# Incidence catchment non-hispanic white 2017 ---- 
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 3:25 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Non Hispanic
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
+incidence_catch_white <- read_csv("data/raw/AZDHS/query_incidence_catch_white_2013-2017.csv",
+                                  na = c("", "NA", "**", "*"),
+                                  skip = 1,
+                                  col_names = c(
+                                    "Cancer",
+                                    "Sex",
+                                    "Case_Count",
+                                    "Population",
+                                    "catch_white_Age_Adj_Rate",
+                                    "95CI_min",
+                                    "95CI_max"
+                                  ),
+                                  col_types = cols(
+                                    "Cancer" = col_factor(),
+                                    "Sex" = col_factor(),
+                                    "Case_Count" = col_number(),
+                                    "Population" = col_number(),
+                                    "catch_white_Age_Adj_Rate" = col_number(),
+                                    "95CI_min" = col_number(),
+                                    "95CI_max" = col_number()
+                                  ),  
+)
+
+incidence_catch_white <- incidence_catch_white %>%
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  mutate(race = "Non-Hispanic White",
+         sex = "All",
+         area = "Catchment") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = catch_white_Age_Adj_Rate)
+
+# Incidence catchment hispanic 2016 ---- 
 # Query Definition	
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
@@ -589,7 +738,55 @@ incidence_catch_hispanic <- incidence_catch_hispanic %>%
   drop_na() %>%
   select(Cancer, catch_hisp_Age_Adj_Rate)
 
-# Incidence catchment American Indian ---- 
+# Incidence catchment hispanic 2017 ---- 
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 3:28 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	White, Hispanic
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
+incidence_catch_hispanic <- read_csv("data/raw/AZDHS/query_catchment_incidence_2013_2017_hisp.csv",
+                                     na = c("", "NA", "**", "*"),
+                                     skip = 1,
+                                     col_names = c(
+                                       "Cancer",
+                                       "Sex",
+                                       "Case_Count",
+                                       "Population",
+                                       "catch_hisp_Age_Adj_Rate",
+                                       "95CI_min",
+                                       "95CI_max"
+                                     ),
+                                     col_types = cols(
+                                       "Cancer" = col_factor(),
+                                       "Sex" = col_factor(),
+                                       "Case_Count" = col_number(),
+                                       "Population" = col_number(),
+                                       "catch_hisp_Age_Adj_Rate" = col_number(),
+                                       "95CI_min" = col_number(),
+                                       "95CI_max" = col_number()
+                                     ),  
+)
+
+incidence_catch_hispanic <- incidence_catch_hispanic %>%
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  mutate(race = "White Hispanic",
+         sex = "All",
+         area = "Catchment") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = catch_hisp_Age_Adj_Rate)
+
+# Incidence catchment American Indian 2016 ---- 
 # Query Definition	
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
@@ -631,7 +828,55 @@ incidence_catch_ai <- incidence_catch_ai %>%
   drop_na() %>%
   select(Cancer, catch_ai_Age_Adj_Rate)
 
-# Incidence catchment Black ---- 
+# Incidence catchment American Indian 2017 ---- 
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 3:30 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	American Indian
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
+incidence_catch_ai <- read_csv("data/raw/AZDHS/query_incidence_catch_amer_ind_2013-2017.csv",
+                               na = c("", "NA", "**", "*"),
+                               skip = 1,
+                               col_names = c(
+                                 "Cancer",
+                                 "Sex",
+                                 "Case_Count",
+                                 "Population",
+                                 "catch_ai_Age_Adj_Rate",
+                                 "95CI_min",
+                                 "95CI_max"
+                               ),
+                               col_types = cols(
+                                 "Cancer" = col_factor(),
+                                 "Sex" = col_factor(),
+                                 "Case_Count" = col_number(),
+                                 "Population" = col_number(),
+                                 "catch_ai_Age_Adj_Rate" = col_number(),
+                                 "95CI_min" = col_number(),
+                                 "95CI_max" = col_number()
+                               ),  
+)
+
+incidence_catch_ai <- incidence_catch_ai %>%
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  mutate(race = "American Indian",
+         sex = "All",
+         area = "Catchment") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = catch_ai_Age_Adj_Rate)
+
+# Incidence catchment Black 2016 ---- 
 # Query Definition	
 # Query Item	Description / Value
 # Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
@@ -673,6 +918,71 @@ incidence_catch_black <- incidence_catch_black %>%
   drop_na() %>%
   select(Cancer, catch_black_Age_Adj_Rate)
 
+# Incidence catchment Black 2017 ---- 
+# Query Definition	
+# Query Item	Description / Value
+# Navigation Path	IBIS-PH > Custom Query > AzCR > Age-Adjusted Cancer Incidence Rates
+# Module	Arizona Cancer Registry Query Module
+# Measure	Age-Adjusted Cancer Incidence Rates, Incidence Per 100,000 Population (04/28/2020)
+# Time of Query	Mon, Aug 17, 2020 3:33 PM, MST
+# Year Filter	2017, 2016, 2015, 2014, 2013
+# Cancer Sites Filter	Cancer Sites, Oral Cavity, Esophagus, Stomach, Small Intestine, Colorectal, Anus, Anal Canal and Anorectum, Liver and Intrahepatic Bile Duct, Gallbladder and Other Biliary, Pancreas, Larynx, Lung and Bronchus, Bones and Joints, Cutaneous Melanoma, Breast Invasive, Corpus Uteri and Uterus, NOS, Cervix Uteri, Ovary, Prostate, Testis, Urinary Bladder, Kidney/Renal Pelvis, Brain and Other Nervous System, Thyroid, Hodgkins Lymphoma, Non-Hodgkins Lymphoma, Myeloma, Leukemia, Mesothelioma, Kaposi Sarcoma, Other Invasive
+# Race Filter	Black
+# County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
+# Data Grouped By	Cancer Sites, Sex
+
+incidence_catch_black <- read_csv("data/raw/AZDHS/query_incidence_catch_black_2013-2017.csv",
+                                  na = c("", "NA", "**", "*"),
+                                  skip = 1,
+                                  col_names = c(
+                                    "Cancer",
+                                    "Sex",
+                                    "Case_Count",
+                                    "Population",
+                                    "catch_black_Age_Adj_Rate",
+                                    "95CI_min",
+                                    "95CI_max"
+                                  ),
+                                  col_types = cols(
+                                    "Cancer" = col_factor(),
+                                    "Sex" = col_factor(),
+                                    "Case_Count" = col_number(),
+                                    "Population" = col_number(),
+                                    "catch_black_Age_Adj_Rate" = col_number(),
+                                    "95CI_min" = col_number(),
+                                    "95CI_max" = col_number()
+                                  ),  
+)
+
+incidence_catch_black <- incidence_catch_black %>%
+  filter(Sex == "All",
+         Cancer != "Breast Invasive",
+         Cancer != "Other Invasive") %>%
+  mutate(race = "Black",
+         sex = "All",
+         area = "Catchment") %>%
+  select(area,
+         race,
+         cancer = Cancer,
+         rate = catch_black_Age_Adj_Rate)
+
+# combine az, catch, white, hisp, ai, black ---- 
+incidence_table <- bind_rows(incidence_az,
+          incidence_catchment,
+          incidence_catch_white,
+          incidence_catch_hispanic,
+          incidence_catch_ai,
+          incidence_catch_black)
+
+write_rds(incidence_table, "data/tidy/incidence_az_catchment_azdhs_2013-2017_by_cancer.rds")
+  
+catchment_incidence <- incidence_table %>% 
+  filter(area == "Catchment") %>%
+  spread(key = race, value = rate) %>%
+  arrange(desc(All)) 
+
+write_rds(catchment_incidence, "data/tidy/incidence_azdhs_2013-2017_by_cancer_all_sex_all_race.rds")
+
 # combine AZ and catch ---- 
 incidence_az_catch <- full_join(incidence_az, incidence_catch) %>%
   arrange(desc(catch_Age_Adj_Rate,AZ_Age_Adj_Rate))
@@ -688,7 +998,7 @@ incidence_catch_white_hisp_AI <- full_join(incidence_catch_white_hisp, incidence
 incidence_catch_white_hisp_AI_black <- full_join(incidence_catch_white_hisp_AI, incidence_catch_black)
 
 # combine az, catch, and race 
-incidence_az_catch_race <- full_join(incidence_az_catch, incidence_catch_white_hisp_AI_black) %>%
+incidence_az_catch_race <- full_join(azdhs_catch_incidence_2017, incidence_catch_white_hisp_AI_black) %>%
   filter(Cancer != "Other Invasive") 
 
-write_rds(incidence_az_catch_race, "data/tidy/incidence_azdhs_az_catch_race_2012-2016.rds")
+write_rds(incidence_az_catch_race, "data/tidy/incidence_azdhs_az_catch_race_2013-2017.rds")
