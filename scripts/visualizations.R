@@ -5,6 +5,9 @@ library(here)
 library(tidyverse)
 library(ggthemes)
 
+# read incidence data for 2013-2017
+incidence <- read_rds("data/tidy/incidence_usa_az_catch_2013-2017_by_cancer.rds")
+
 # OVERVIEW ----
 
 # Map of Rate of New Cancers catchment ----
