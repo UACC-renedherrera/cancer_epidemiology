@@ -35,6 +35,7 @@ incidence <- read_rds("data/tidy/incidence_usa_az_catch_2013-2017_by_cancer.rds"
 incidence_catchment_by_cancer <- read_rds("data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
 
 # subset and visualize
+# catchment only
 incidence_catchment_by_cancer %>%
   filter(Sex == "All",
          Cancer != "All",
@@ -49,10 +50,66 @@ incidence_catchment_by_cancer %>%
     title = "Top 10 Cancers by Rates of New Cancer Cases",
     subtitle = "UAZCC Catchment 2013-2017, All Races/Ethnicities, Male and Female",
     y = "",
-    x = "Age Adjusted Rate per 100,000"
+    x = "Age Adjusted Rate per 100,000",
+    caption = "Source: The Arizona Department of Health Services (ADHS) Indicator Based Information System for Public Health (IBIS-PH)"
   ) +
   theme_clean()
+  
+ggsave("incidence_top_10_cancer_catchment.svg",
+       width = 20,
+       height = 11.25,
+       device = svg,
+       path = "figures/graphics/",
+       scale = .5)
 
+# comparing usa / az / catchment
+list_of_cancer_to_chart <- incidence %>%
+  filter(area == "Catchment",
+         cancer != "Overall",
+         race == "All") %>%
+  arrange(desc(rate)) %>%
+  slice(1:10) %>%
+  distinct(cancer)
+
+list_of_cancer_to_chart <- c(
+  "Breast Invasive (Female)",           
+  "Prostate (Male)",                      
+  "Lung and Bronchus",                    
+  "Colorectal",                           
+  "Cutaneous Melanoma",                 
+  "Corpus Uteri and Uterus, NOS (Female)",
+  "Urinary Bladder",                      
+  "Kidney/Renal Pelvis",                  
+  "Non-Hodgkins Lymphoma",                
+  "Thyroid"
+)
+
+incidence %>% 
+  filter(cancer %in% list_of_cancer_to_chart,
+         race == "All") %>%
+  group_by(area) %>%
+  arrange(desc(rate)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(x = rate, y = reorder(cancer, rate), fill = area)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Top 10 Cancers by Rates of New Cancer Cases",
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, All Races/Ethnicities, Male and Female",
+    y = "",
+    x = "Age Adjusted Rate per 100,000",
+    caption = "Source: U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2017)
+    ADHS IBIS-PH"
+  ) +
+  theme_clean() +
+  theme(legend.position = "bottom")
+  
+ggsave("incidence_top_10_cancer_usa_az_catchment.svg",
+       width = 20,
+       height = 11.25,
+       device = svg,
+       path = "figures/graphics/",
+       scale = .5)
+  
 # Chart of Top 10 Cancers by Rates of Cancer Deaths ----
 # Cancer mortality for catchment
 # 2014-2018, All Races/Ethnicities, Male and Female
@@ -66,15 +123,24 @@ mortality_catchment_by_cancer %>%
   arrange(desc(age_adjusted_rate)) %>%
   slice(1:10) %>%
   ggplot(mapping = aes(x = age_adjusted_rate, y = reorder(cancer, age_adjusted_rate))) +
-  geom_bar(stat = "identity", fill = "#0C234B") +
+  geom_bar(stat = "identity", fill = "#AB0520") +
   geom_label(aes(label = age_adjusted_rate)) +
   labs(
     title = "Top 10 Cancers by Rates of Cancer Deaths",
     subtitle = "UAZCC Catchment 2014-2018, All Races/Ethnicities, Male and Female",
     y = "",
-    x = "Age Adjusted Rate per 100,000"
+    x = "Age Adjusted Rate per 100,000",
+    caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)"
   ) +
-  theme_clean()
+  theme_clean() +
+  theme(legend.position = "bottom")
+
+ggsave("mortality_top_10_cancer_catchment.svg",
+       width = 20,
+       height = 11.25,
+       device = svg,
+       path = "figures/graphics/",
+       scale = .5)
 
 # DEMOGRAPHICS ---- 
 
@@ -106,6 +172,8 @@ mortality_catchment_by_cancer %>%
 # trend line chart Annual Rates of New Cancers, 1999-2017 ---- 
 # Changes Over Time: All Types of Cancer
 # New Cancers, All Ages, All Races/Ethnicities, Both Sexes
+
+
 
 
 # bar chart Annual Number of New Cancers, 1999-2017 ---- 
