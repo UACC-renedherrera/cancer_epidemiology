@@ -13,11 +13,6 @@ library(ggthemes)
 # load USA data ----
 incidence_usa <- read_rds("data/tidy/USCS_by_cancer.rds")
 
-unique(incidence_usa$YEAR)
-unique(incidence_usa$SITE)
-unique(incidence_usa$RACE)
-unique(incidence_usa$SEX)
-
 incidence_usa <- incidence_usa %>%
   drop_na() %>%
   filter(YEAR == "2013-2017",
@@ -68,6 +63,11 @@ incidence_az <- incidence_az %>%
 
 # combine usa, az, catchment, race
 incidence_table <- bind_rows(incidence_usa, incidence_az)
+
+incidence_table <- incidence_table %>%
+  mutate(
+  area = as.ordered(incidence_table$area)
+)
 
 write_rds(incidence_table, "data/tidy/incidence_usa_az_catch_2013-2017_by_cancer.rds")
 
