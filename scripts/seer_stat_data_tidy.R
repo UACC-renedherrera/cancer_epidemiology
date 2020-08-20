@@ -249,18 +249,27 @@ mortality_usa_by_cancer <- read_delim("data/raw/seer_stat/mortality_usa_all_race
   delim = ",",
   col_names = c(
     "cancer",
+    "sex",
     "usa_age_adjusted_rate",
     "case_count",
     "population"
   ),
   col_types = cols(
     "cancer" = col_factor(),
+    "sex" = col_factor(),
     "usa_age_adjusted_rate" = col_number(),
     "case_count" = col_number(),
     "population" = col_number()
   ),
   na = c("", "^", "NA")
 )
+
+mortality_usa_by_cancer <- mortality_usa_by_cancer %>%
+  drop_na()
+
+write_csv(mortality_usa_by_cancer, "data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv")
+
+mortality_usa_by_cancer <- read_csv("data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv")
 
 mortality_usa_by_cancer <- mortality_usa_by_cancer %>%
   drop_na() %>%
