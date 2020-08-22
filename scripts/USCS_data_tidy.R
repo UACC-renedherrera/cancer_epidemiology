@@ -70,8 +70,15 @@ by_cancer <- read_delim("data/raw/USCS_1999-2017/BYSITE.TXT",
     )
 )
 
+by_cancer <- by_cancer %>%
+  filter(EVENT_TYPE == "Incidence") %>%
+  mutate(area = "US",
+         source = "USCS")
+
+uscs_list_of <- distinct(by_cancer, SITE)
+
 # save dataset
-write_rds(by_cancer, "data/tidy/USCS_by_cancer.rds")
+write_rds(by_cancer, "data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
 
 # use datamaid package to generate codebook
 makeCodebook(by_cancer, file = "data/tidy/codebook_USCS_by_cancer.Rmd")
