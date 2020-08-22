@@ -75,6 +75,11 @@ incidence_table <- incidence %>%
 
 write_csv(incidence_table, "data/tidy/uazcc_incidence_table_2013-2017.csv")
 
+
+
+
+# disparities catchment
+
 incidence_table %>%
   filter(IRR_Catch > 1) %>%
   select(SITE, US, AZ, Catchment) %>%
@@ -83,16 +88,114 @@ incidence_table %>%
          value = rate) %>%
   write_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities.rds")
 
+# disparities catchment white
+
+incidence_table %>%
+  filter(IRR_White > 1) %>%
+  slice(1:10) %>%
+  select(SITE, US, AZ, Catchment, "White Non-Hispanic") %>%
+  gather(US, AZ, Catchment, "White Non-Hispanic",
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_white.rds")
+
+# disparities catchment hispanic
+
+incidence_table %>%
+  filter(IRR_Hisp > 1) %>%
+  select(SITE, US, AZ, Catchment, "White Hispanic") %>%
+  gather(US, AZ, Catchment, "White Hispanic",
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_hispanic.rds")
+
+# disparities catchment ai
+
+incidence_table %>%
+  filter(IRR_AI > 1) %>%
+  select(SITE, US, AZ, Catchment, "American Indian") %>%
+  gather(US, AZ, Catchment, "American Indian",
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_ai.rds")
+
 # mortality ----
 
-mortality <- read_rds("data/tidy/combined_mortality_for_uazcc_attribute_table.rds")
+mortality <- read_rds("data/tidy/mortality_seer_area_race_cancer_rate.rds")
 
-mortality <- mortality %>%
-  mutate(IRR_AZ = AZ_age_adjusted_rate / usa_age_adjusted_rate,
-         IRR_Catch = Catch_age_adjusted_rate / usa_age_adjusted_rate,
-         IRR_White = white_Age_Adjusted_Rate / usa_age_adjusted_rate,
-         IRR_Hisp = hispanic_Age_Adjusted_Rate / usa_age_adjusted_rate,
-         IRR_AI = AI_Age_Adjusted_Rate / usa_age_adjusted_rate,
-         IRR_Black = black_Age_Adjusted_Rate / usa_age_adjusted_rate)
+mortality_usa_az_catch <- mortality %>%
+  filter(race == "All Races") %>%
+  spread(key = area,
+         value = rate) %>%
+  arrange(desc(Catchment)) %>%
+  select(!(race))
 
-write_rds(mortality, "data/tidy/uazcc_mortality_table.rds")
+mortality_catch_race <-  mortality %>%
+  filter(area == "Catchment",
+         race != "All Races") %>%
+  select(!(area)) %>%
+  spread(key = race,
+         value = rate)
+
+mortality_table <- full_join(mortality_usa_az_catch, mortality_catch_race) %>%
+  select(cancer, 
+         US, 
+         AZ, 
+         Catchment,
+         White,
+         Hispanic,
+         "American_Indian" = `American Indian/Alaska Native`,
+         Black)
+
+mortality_table <- mortality_table %>%
+  mutate(IRR_AZ = AZ / US,
+         IRR_Catch = Catchment / US,
+         IRR_White = White / US,
+         IRR_Hisp = Hispanic / US,
+         IRR_AI = American_Indian / US,
+         IRR_Black = Black / US) %>%
+  arrange(desc(Catchment))
+
+write_csv(mortality_table, "data/tidy/uazcc_mortality_table_2014-2018.csv")
+
+# mortality disparities for catchment 
+mortality_table %>%
+  filter(IRR_Catch > 1) %>%
+  select(cancer, US, AZ, Catchment) %>%
+  arrange(desc(Catchment)) %>%
+  slice(1:10) %>%
+  gather(US, AZ, Catchment,
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities.rds")
+
+# mortality disparities for white in catchment 
+mortality_table %>%
+  filter(IRR_White > 1) %>%
+  select(cancer, US, AZ, Catchment, White) %>%
+  arrange(desc(White)) %>%
+  slice(1:10) %>%
+  gather(US, AZ, Catchment, White, 
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_white.rds")
+
+# mortality disparities for hispanic in catchment 
+mortality_table %>%
+  filter(IRR_Hisp > 1) %>%
+  select(cancer, US, AZ, Catchment, Hispanic) %>%
+  arrange(desc(Hispanic)) %>%
+  gather(US, AZ, Catchment, Hispanic, 
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_hispanic.rds")
+
+# mortality disparities for American Indian in catchment 
+mortality_table %>%
+  filter(IRR_AI > 1) %>%
+  select(cancer, US, AZ, Catchment, American_Indian) %>%
+  arrange(desc(American_Indian)) %>%
+  gather(US, AZ, Catchment, American_Indian, 
+         key = area,
+         value = rate) %>%
+  write_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_ai.rds")
