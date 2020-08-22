@@ -39,18 +39,27 @@ mortality_usa_by_cancer <- mortality_usa_by_cancer %>%
 
 # write_csv(mortality_usa_by_cancer, "data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv")
 
-mortality_usa_by_cancer <- read_csv("data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv")
+mortality_usa_by_cancer <- read_csv("data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv",
+                                    skip = 1,
+                                    col_names = c(
+                                      "cancer",
+                                      "sex",
+                                      "age_adjusted_rate",
+                                      "case_count",
+                                      "population"
+                                    ),
+                                    col_types = cols(
+                                      "cancer" = col_factor(),
+                                      "sex" = col_factor(),
+                                      "age_adjusted_rate" = col_number(),
+                                      "case_count" = col_number(),
+                                      "population" = col_number()
+                                    ),
+                                    na = c("", "^", "NA")
+)
 
 mortality_usa_by_cancer <- mortality_usa_by_cancer %>%
-  drop_na() %>%
-  arrange(desc(usa_age_adjusted_rate)) %>%
-  filter(cancer != "All Causes of Death")
-
-list_of_cancer <- mortality_usa_by_cancer %>%
-  select(cancer) %>%
-  mutate(cancer = as.character(cancer)) %>%
-  arrange(cancer) %>%
-  kable()
+  drop_na()
 
 write_rds(mortality_usa_by_cancer, "data/tidy/seer_mortality_usa_by_cancer_2014-2018_all_race_all_sex.rds")
 
@@ -90,18 +99,10 @@ mortality_az_by_cancer_for_UAZCC <- mortality_az_by_cancer %>%
 
 # write_csv(mortality_az_by_cancer_for_UAZCC, "data/raw/seer_stat/seer_mortality_AZ_all_race_all_sex_2014-2018_by_cancer.csv")
 
-mortality_az_by_cancer_for_UAZCC <- read_csv("data/raw/seer_stat/mortality_usa_all_race_all_sex_2014-2018_by_cancer.csv")
+mortality_az_by_cancer_for_UAZCC <- read_csv("data/raw/seer_stat/seer_mortality_AZ_all_race_all_sex_2014-2018_by_cancer.csv")
 
 mortality_az_by_cancer_for_UAZCC <- mortality_az_by_cancer_for_UAZCC %>%
-  drop_na() %>%
-  arrange(desc(usa_age_adjusted_rate)) %>%
-  filter(cancer != "All Causes of Death")
-
-list_of_cancer <- mortality_az_by_cancer_for_UAZCC %>%
-  select(cancer) %>%
-  mutate(cancer = as.character(cancer)) %>%
-  arrange(cancer) %>%
-  kable()
+  drop_na() 
 
 write_rds(mortality_az_by_cancer_for_UAZCC, "data/tidy/seer_mortality_AZ_all_race_all_sex_2014-2018_by_cancer.rds")
 
@@ -143,15 +144,7 @@ mortality_az_catch_by_cancer_for_UAZCC <- mortality_az_catch_by_cancer %>%
 mortality_az_catch_by_cancer_for_UAZCC <- read_csv("data/raw/seer_stat/mortality_catchment_all_race_all_sex_2014-2018_by_cancer.csv")
 
 mortality_az_catch_by_cancer_for_UAZCC <- mortality_az_catch_by_cancer_for_UAZCC %>%
-  drop_na() %>%
-  arrange(desc(age_adjusted_rate)) %>%
-  filter(cancer != "All Causes of Death")
-
-list_of_cancer <- mortality_az_catch_by_cancer_for_UAZCC %>%
-  select(cancer) %>%
-  mutate(cancer = as.character(cancer)) %>%
-  arrange(cancer) %>%
-  kable()
+  drop_na() 
 
 write_rds(mortality_az_catch_by_cancer_for_UAZCC, "data/tidy/mortality_az_catch_by_cancer_for_UAZCC_2014-2018_all_race_all_sex.rds")
 
@@ -233,16 +226,15 @@ mortality_az_catch_hisp <- mortality_az_catch_hisp %>%
 
 # write_csv(mortality_az_catch_hisp, "data/raw/seer_stat/mortality_catchment_2014-2018_by_race_hispanic.csv")
 
-mortality_az_catch_hisp <- read_csv("data/raw/seer_stat/mortality_catchment_2014-2018_by_race_not_hisp.csv")
+mortality_az_catch_hisp <- read_csv("data/raw/seer_stat/mortality_catchment_2014-2018_by_race_hispanic.csv")
 
 mortality_az_catch_hisp <- mortality_az_catch_hisp %>%
-  mutate(Race = "Hispanic")
+  mutate(race = "Hispanic",
+         area = "Catchment")
 
-write_rds(mortality_az_catch_hisp, "data/tidy/seer_mortality_catch_cancer_by_race_not_hispanic.rds")
+write_rds(mortality_az_catch_hisp, "data/tidy/seer_mortality_catch_cancer_by_race_hispanic.rds")
 
-
-
-
+####
 # 5 county catchment ----
 # mortality data obtained from seer stat
 # age adjusted mortality rates
