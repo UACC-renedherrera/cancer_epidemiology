@@ -1,13 +1,78 @@
-# set up ---- 
-# load packages 
+# set up ----
+# load packages
 library(here)
 library(tidyverse)
 library(knitr)
 library(ggthemes)
 
+#### incidence table for uazcc ################################################
+incidence_table <- read_rds("data/tidy/incidence_az_catchment_azdhs_2013-2017_by_cancer_race.rds")
+
+incidence_table_az <- incidence_table %>%
+  filter(SEX == "All",
+         area == "AZ") %>%
+  select(SITE, 
+         "AZ" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+incidence_table_catch <- incidence_table %>%
+  filter(SEX == "All",
+         area == "Catchment",
+         RACE == "All Races") %>%
+  select(SITE, 
+         "Catchment" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+distinct(incidence_table, RACE)
+
+incidence_table_white <- incidence_table %>%
+  filter(SEX == "All",
+         area == "Catchment",
+         RACE == "White Non-Hispanic") %>%
+  select(SITE, 
+         "White Non-Hispanic" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+incidence_table_hisp <- incidence_table %>%
+  filter(SEX == "All",
+         area == "Catchment",
+         RACE == "White Hispanic") %>%
+  select(SITE, 
+         "White Hispanic" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+incidence_table_ai <- incidence_table %>%
+  filter(SEX == "All",
+         area == "Catchment",
+         RACE == "American Indian") %>%
+  select(SITE, 
+         "American Indian" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+incidence_table_black <- incidence_table %>%
+  filter(SEX == "All",
+         area == "Catchment",
+         RACE == "Black") %>%
+  select(SITE, 
+         "Black" = AGE_ADJUSTED_RATE) %>%
+  drop_na()
+
+incidence_table_uazcc <- full_join(incidence_table_az, incidence_table_catch)
+
+incidence_table_uazcc <- full_join(incidence_table_uazcc, incidence_table_white)
+
+incidence_table_uazcc <- full_join(incidence_table_uazcc, incidence_table_hisp)
+
+incidence_table_uazcc <- full_join(incidence_table_uazcc, incidence_table_ai)
+
+incidence_table_uazcc <- full_join(incidence_table_uazcc, incidence_table_black) %>%
+  arrange(desc(Catchment))
+  
+write_rds(incidence_table_uazcc, "data/tidy/incidence_az_catch_2013-2017_table.rds")
+
 # all races ----
 # check the difference between 2012-2016 & 2013-2017
-# load data to environment 
+# load data to environment
 azdhs_catch_incidence_2016 <- read_rds("data/tidy/azdhs_catchment_2012-2016_incidence_by_cancer.rds")
 azdhs_catch_incidence_2017 <- read_rds("data/tidy/azdhs_catchment_2013-2017_incidence_by_cancer.rds")
 
@@ -16,8 +81,8 @@ azdhs <- bind_rows(azdhs_catch_incidence_2016, azdhs_catch_incidence_2017)
 
 # 2016 & 2017 ----
 # group by year, sex; filter cancer; arrange by rate; choose top five for each year and sex
-# visualize 
-azdhs %>% 
+# visualize
+azdhs %>%
   group_by(Year, Sex) %>%
   filter(Cancer != "All" & Cancer != "Other Invasive") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -35,8 +100,8 @@ azdhs %>%
 
 # 2012-2016 & 2013-2017
 # all sexes; all races
-# table 
-azdhs %>% 
+# table
+azdhs %>%
   group_by(Year, Sex) %>%
   filter(Cancer != "All" & Cancer != "Other Invasive") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -47,7 +112,7 @@ azdhs %>%
 
 # hispanic only ----
 # check the difference between 2012-2016 & 2013-2017
-# load data to environment 
+# load data to environment
 azdhs_catch_incidence_2016_hisp <- read_rds("data/tidy/azdhs_catchment_2012-2016_hispanic_incidence_by_cancer.rds")
 azdhs_catch_incidence_2017_hisp <- read_rds("data/tidy/azdhs_catchment_2013-2017_hispanic_incidence_by_cancer.rds")
 
@@ -56,8 +121,8 @@ azdhs_hisp <- bind_rows(azdhs_catch_incidence_2016_hisp, azdhs_catch_incidence_2
 
 # 2016-2017 ----
 # group by year, sex; filter cancer; arrange by rate; choose top five for each year and sex
-# visualize 
-azdhs_hisp %>% 
+# visualize
+azdhs_hisp %>%
   group_by(Year, Sex) %>%
   filter(Cancer != "All" & Cancer != "Other Invasive") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -73,9 +138,9 @@ azdhs_hisp %>%
        caption = "Source: Arizona Cancer Registry Query Module")
 
 # 2012-2016 & 2013-2017
-# all sexes; hispanic only 
-# table 
-azdhs_hisp %>% 
+# all sexes; hispanic only
+# table
+azdhs_hisp %>%
   group_by(Year, Sex) %>%
   filter(Cancer != "All" & Cancer != "Other Invasive") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -118,7 +183,7 @@ azdhs_catch_incidence_2017_top_5 <- azdhs_catch_incidence_2017 %>%
 
 # top five incidence
 # 2013-2017
-# all sexes, hispanic only 
+# all sexes, hispanic only
 # view as table
 azdhs_catch_incidence_2017_top_5 %>%
   select(Sex, Cancer, Age_Adj_Rate) %>%
@@ -127,7 +192,7 @@ azdhs_catch_incidence_2017_top_5 %>%
     caption = "5 Most Common New Cancers in Five County Catchment. Source: Arizona Cancer Registry Module (2013-2017"
   )
 
-# view as plot 
+# view as plot
 azdhs_catch_incidence_2017_top_5 %>%
   ggplot(aes(y = reorder(Cancer, Age_Adj_Rate), x = Age_Adj_Rate)) +
   geom_col(position = "dodge", alpha = 0.8) +
@@ -139,7 +204,7 @@ azdhs_catch_incidence_2017_top_5 %>%
        x = "Age Adjusted Rate per 100,000",
        caption = "Source: Arizona Cancer Registry Query Module (2013-2017)")
 
-# hispanic only 2016 ---- 
+# hispanic only 2016 ----
 # top 5 incidence for each sex
 # grouped by sex
 azdhs_catch_incidence_2016_hisp_top_5 <- azdhs_catch_incidence_2016_hisp %>%
@@ -152,13 +217,13 @@ azdhs_catch_incidence_2016_hisp_top_5 <- azdhs_catch_incidence_2016_hisp %>%
   slice(1:5)
 
 # 2012-2016
-# all sexes; hispanic only 
+# all sexes; hispanic only
 # view as table
 azdhs_catch_incidence_2016_hisp_top_5 %>%
   select(Sex, Cancer, Age_Adj_Rate) %>%
   kable(col.names = c("Sex", "Cancer", "Age Adjusted Rate per 100,000"))
 
-# hispanic only 2017 ---- 
+# hispanic only 2017 ----
 # top 5 incidence for each sex
 # group by sex
 azdhs_catch_incidence_2017_hisp_top_5 <- azdhs_catch_incidence_2017_hisp %>%
@@ -171,7 +236,7 @@ azdhs_catch_incidence_2017_hisp_top_5 <- azdhs_catch_incidence_2017_hisp %>%
   slice(1:5)
 
 # 2013-2017
-# all sexes; hispanic only 
+# all sexes; hispanic only
 # view as table
 azdhs_catch_incidence_2017_hisp_top_5 %>%
   select(Sex, Cancer, Age_Adj_Rate) %>%
@@ -227,8 +292,8 @@ uscs <- uscs %>%
 # merge azdhs and uscs data
 combined <- bind_rows(azdhs, uscs)
 
-# plot bar chart to show difference 
-combined %>% 
+# plot bar chart to show difference
+combined %>%
   group_by(Year, Sex) %>%
   filter(Cancer != "All" & Cancer != "Other Invasive") %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -259,7 +324,7 @@ pima_incidence_by_cancer %>%
   kable(col.names = c("Year", "Race", "Sex", "Cancer", "Age Adjusted Incidence Rate per 100K"),
         caption = "Age adjusted incidence rate for Pima County, AZ; Most recent five year average (2013-2017); All races; 5 most incident cancers grouped by sex")
 
-# show top five as plot 
+# show top five as plot
 pima_incidence_by_cancer %>%
   group_by(Sex) %>%
   filter(Cancer != "All") %>%
@@ -309,7 +374,7 @@ pima_incidence_by_race %>%
   kable(col.names = c("Year", "Cancer", "Race", "Sex", "Age Adjusted Incidence Rate per 100K"),
         caption = "Age adjusted incidence rate for Pima County, AZ; Most recent five year average (2013-2017); All races; 5 most incident cancers grouped by sex")
 
-# show top five as plot 
+# show top five as plot
 pima_incidence_by_race %>%
   group_by(Race, Sex) %>%
   arrange(desc(Age_Adj_Rate)) %>%
@@ -353,7 +418,7 @@ pima_incidence_by_age %>%
   kable(col.names = c("Year", "Cancer", "Age Group", "Sex", "Cases"),
         caption = "Highest number of cases for each age group; grouped by sex; for Pima County, AZ; Most recent five year average (2013-2017); All races")
 
-# show top five as plot 
+# show top five as plot
 pima_incidence_by_age %>%
   filter(Age_Group != "All") %>%
   group_by(Sex) %>%
@@ -396,7 +461,7 @@ pima_incidence_by_year %>%
   kable(col.names = c("Year", "Sex", "Age Adjusted Incidence Rate per 100,000"),
         caption = "Age adjusted incidence rate of all cancers combined for years from 1995-2017; grouped by sex")
 
-# show top five as plot 
+# show top five as plot
 pima_incidence_by_year %>%
   ggplot(mapping = aes(y = Age_Adj_Rate, x = Year, group = Sex, color = Sex)) +
   geom_line() +
@@ -442,9 +507,17 @@ incidence_catch_for_UAZCC %>%
 # read race data from catchment ----
 incidence_catch_white_hisp_AI_black <- read_rds("data/tidy/incidence_azdhs_az_catch_race_2013-2017.rds")
 
-# combine catch and race data ---- 
+# combine catch and race data ----
 incidence_catch_for_UAZCC <- full_join(incidence_catch_for_UAZCC, incidence_catch_white_hisp_AI_black)
 
 write_rds(incidence_catch_for_UAZCC, "data/tidy/ADHS_incidence_2012_2016_catchment.rds")
 
 incidence_catch_for_UAZCC %>% kable()
+
+
+# UAZCC Catchment White
+
+
+
+# UAZCC Catchment Hispanic
+azdhs_catch_incidence_2017_hisp <- read_rds("data/tidy/azdhs_catchment_2013-2017_hispanic_incidence_by_cancer.rds")
