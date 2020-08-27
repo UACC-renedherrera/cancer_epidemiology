@@ -216,6 +216,17 @@ by_state %>%
 # by AZ county ----
 # read data to environment
 by_az_county <- read_rds("data/tidy/USCS_by_az_county.rds")
+
+str(by_az_county)
+unique(by_az_county$RACE)
+unique(by_az_county$AREA)
+
+by_az_county$RACE <- ordered(by_az_county$RACE, levels = c("All Races",
+                                                           "White",
+                                                           "Hispanic",
+                                                           "American Indian/Alaska Native",
+                                                           "Black",
+                                                           "Asian/Pacific Islander"))
 # data table
 by_az_county %>%
   group_by(AREA) %>%
@@ -251,6 +262,82 @@ by_az_county %>%
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
   ) +
   theme_solarized()
+
+# incidence for catchment counties in descending order of rate
+incidence_catch_counties <- by_az_county %>%
+  mutate(SITE = 
+           case_when( #variable == old ~ new,
+             SITE == "All Cancer Sites Combined" ~ "All",
+             SITE == "Female Breast" ~ "Breast Invasive (Female)",
+             SITE == "Male and Female Breast" ~ "Breast Invasive (Female)",
+             SITE == "Cervix" ~ "Cervix Uteri (Female)",
+             SITE == "Colon and Rectum" ~ "Colorectal",
+             SITE == "Corpus and Uterus, NOS" ~ "Corpus Uteri and Uterus, NOS (Female)",
+             SITE == "Corpus" ~ "Corpus (Female)",
+             SITE == "Melanomas of the Skin" ~ "Cutaneous Melanoma",
+             SITE == "Gallbladder" ~ "Gallbladder and Other Biliary",
+             SITE == "Kidney and Renal Pelvis" ~ "Kidney/Renal Pelvis",
+             SITE == "Leukemias" ~ "Leukemia",
+             SITE == "Non-Hodgkin Lymphoma" ~ "Non-Hodgkins Lymphoma",
+             SITE == "Ovary" ~ "Ovary (Female)",
+             SITE == "Prostate" ~ "Prostate (Male)",
+             SITE == "Testis" ~ "Testis (Male)",
+             SITE == "Oral Cavity and Pharynx" ~ "Oral Cavity",
+             SITE == "Hodgkin Lymphoma" ~ "Hodgkins Lymphoma",
+             TRUE ~ as.character(SITE)))%>%
+  filter(EVENT_TYPE == "Incidence",
+         RACE == "All Races",
+         SEX == "Male and Female",
+         AREA %in% c("Cochise", "Pima", "Pinal", "Santa Cruz", "Yuma")) %>%
+  select(AREA, AGE_ADJUSTED_RATE, SITE) %>%
+  spread(key = AREA, 
+         value = AGE_ADJUSTED_RATE) %>%
+  arrange(desc(Pima))
+
+incidence_catch_counties <- write_csv("data/tidy/incidence_az_counties_uscs_2013-2017.csv")
+
+testing <- full_join(incidence_table_uazcc, incidence_catch_counties) %>%
+  slice(2:4) %>%
+  gather(AZ, Catchment, `White Non-Hispanic`, `American Indian`, Black, Cochise, Pima, Pinal, `Santa Cruz`, Yuma,
+         key = "area",
+         value = "rate"
+         )
+
+ggplot(data = testing, mapping = aes(x = area, y = rate, fill = SITE)) +
+  geom_bar(stat = "identity", position = "dodge")
+
+# mortality for catchment counties in descending order of rate
+mortality_catch_counties <- by_az_county %>%
+  mutate(SITE = 
+           case_when( #variable == old ~ new,
+               SITE == "All Cancer Sites Combined" ~ "All",
+               SITE == "Female Breast" ~ "Breast Invasive (Female)",
+               SITE == "Male and Female Breast" ~ "Breast Invasive (Female)",
+               SITE == "Cervix" ~ "Cervix Uteri (Female)",
+               SITE == "Colon and Rectum" ~ "Colorectal",
+               SITE == "Corpus and Uterus, NOS" ~ "Corpus Uteri and Uterus, NOS (Female)",
+               SITE == "Corpus" ~ "Corpus (Female)",
+               SITE == "Melanomas of the Skin" ~ "Cutaneous Melanoma",
+               SITE == "Gallbladder" ~ "Gallbladder and Other Biliary",
+               SITE == "Kidney and Renal Pelvis" ~ "Kidney/Renal Pelvis",
+               SITE == "Leukemias" ~ "Leukemia",
+               SITE == "Non-Hodgkin Lymphoma" ~ "Non-Hodgkins Lymphoma",
+               SITE == "Ovary" ~ "Ovary (Female)",
+               SITE == "Prostate" ~ "Prostate (Male)",
+               SITE == "Testis" ~ "Testis (Male)",
+               SITE == "Oral Cavity and Pharynx" ~ "Oral Cavity",
+               SITE == "Hodgkin Lymphoma" ~ "Hodgkins Lymphoma",
+             TRUE ~ as.character(SITE)))%>%
+  filter(EVENT_TYPE == "Mortality",
+         RACE == "All Races",
+         SEX == "Male and Female",
+         AREA %in% c("Cochise", "Pima", "Pinal", "Santa Cruz", "Yuma")) %>%
+  select(AREA, AGE_ADJUSTED_RATE, SITE) %>%
+  spread(key = AREA, 
+         value = AGE_ADJUSTED_RATE) %>%
+  arrange(desc(Pima)) 
+
+mortality_catch_counties <- write_csv("data/tidy/mortality_az_counties_uscs_2013-2017.csv")
 
 # for southern arizona ----
 # 1. by cancer
