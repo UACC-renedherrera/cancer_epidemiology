@@ -84,11 +84,11 @@ incidence_catch <- read_csv("data/raw/AZDHS/query_catchment_incidence_2013-2017.
     "AGE_ADJUSTED_CI_UPPER"
   ),
   col_types = cols(
-    Cancer = col_character(),
-    Sex = col_factor(),
-    Case_Count = col_number(),
-    Population = col_number(),
-    Age_Adj_Rate = col_number(),
+    "SITE" = col_character(),
+    "SEX" = col_factor(),
+    "SEX" = col_number(),
+    "POPULATION" = col_number(),
+    "AGE_ADJUSTED_RATE" = col_number(),
     "AGE_ADJUSTED_CI_LOWER" = col_number(),
     "AGE_ADJUSTED_CI_UPPER" = col_number()
   ),
