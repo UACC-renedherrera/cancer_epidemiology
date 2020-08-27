@@ -70,6 +70,11 @@ incidence_table_uazcc <- full_join(incidence_table_uazcc, incidence_table_black)
   
 write_rds(incidence_table_uazcc, "data/tidy/incidence_az_catch_2013-2017_table.rds")
 
+
+#### Incidence for catchment ####
+#### list of cancers by order of incidence
+cancers_to_include <- incidence_table_catch$SITE
+
 # all races ----
 # check the difference between 2012-2016 & 2013-2017
 # load data to environment
