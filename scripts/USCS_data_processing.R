@@ -2,9 +2,9 @@
 # packages
 library(here)
 library(tidyverse)
-# library(purrr)
 library(ggthemes)
 library(knitr)
+
 
 # use data to replicate State Cancer Profiles but for first Arizona and then five county catchment only
 # incidence ----
@@ -21,7 +21,7 @@ by_state <- read_rds("data/tidy/USCS_by_state.rds")
 
 # for all races
 # for all sexes
-# years 2012-2016
+# years 2013-2017
 # all cancers in descending order
 # data table
 by_state %>%
@@ -30,12 +30,12 @@ by_state %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age-Adjusted Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
+    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
     col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -48,13 +48,13 @@ by_state %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:6) %>%
   select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age-Adjusted Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
+    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
     col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -67,7 +67,7 @@ by_state %>%
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined"
   ) %>%
   group_by(SEX) %>%
@@ -75,7 +75,7 @@ by_state %>%
   slice(1:5) %>%
   select(SEX, SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age-Adjusted Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
+    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
     col.names = c("Sex", "Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -85,7 +85,7 @@ by_state %>%
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined",
     SEX == "Male and Female"
   ) %>%
@@ -95,11 +95,11 @@ by_state %>%
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = SITE), alpha = 0.5) +
   labs(
-    title = "Top 10 New Cancers in Arizona for Year 2012-2016",
+    title = "Top 5 New Cancers in Arizona for Year 2013-2017",
     subtitle = "for all races and sexes combined",
-    x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
+    x = "Age Adjusted Rate per 100,000 (95% Confidence Interval)",
     y = "",
-    caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
+    caption = "Source: U.S. Cancer Statistics 2001–2017 Public Use Research Database"
   ) +
   theme_solarized()
 
@@ -111,7 +111,7 @@ az_top_ten_incidence <- by_state %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -124,7 +124,7 @@ az_top_ten_incidence <- unique(az_top_ten_incidence$SITE)
 # for each race ----
 # all sexes
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_state %>%
   group_by(RACE) %>%
@@ -132,13 +132,13 @@ by_state %>%
     SEX == "Male and Female",
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(RACE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age Adjusted Incidence Rates by Race for Arizona; Year 2012-2016",
+    caption = "Overall Age Adjusted Incidence Rates by Race for Arizona; Year 2013-2017",
     col.names = c("Race", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -149,7 +149,7 @@ by_state %>%
     SEX == "Male and Female",
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -158,8 +158,8 @@ by_state %>%
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = RACE), alpha = 0.5) +
   labs(
-    title = "Age Adjusted Incidence Rates by Race",
-    subtitle = "Arizona; Year 2012-2016; all sexes combined",
+    title = "Overall Age Adjusted Incidence Rates by Race",
+    subtitle = "Arizona; Year 2013-2017; all sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -169,7 +169,7 @@ by_state %>%
 # for each sex ----
 # all races
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_state %>%
   group_by(SEX) %>%
@@ -177,13 +177,13 @@ by_state %>%
     RACE == "All Races",
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age Adjusted Incidence Rates by Sex for Arizona; Year 2012-2016",
+    caption = "Overall Age Adjusted Incidence Rates by Sex for Arizona; Year 2013-2017",
     col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -194,7 +194,7 @@ by_state %>%
     RACE == "All Races",
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -202,8 +202,8 @@ by_state %>%
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = SEX), alpha = 0.5) +
   labs(
-    title = "Age Adjusted Incidence Rates by Sex",
-    subtitle = "Arizona; Year 2012-2016; all sexes combined",
+    title = "Overall Age Adjusted Incidence Rates by Sex",
+    subtitle = "Arizona; Year 2013-2017; all sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -217,6 +217,7 @@ by_state %>%
 # read data to environment
 by_az_county <- read_rds("data/tidy/USCS_by_az_county.rds")
 
+# examine the data 
 str(by_az_county)
 unique(by_az_county$RACE)
 unique(by_az_county$AREA)
@@ -238,7 +239,7 @@ by_az_county %>%
   ) %>%
   select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted incidence rates by Arizona county for years 2012-2016; all sexes, races, and cancer sites combined",
+    caption = "Overall Age adjusted incidence rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
     col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -255,11 +256,11 @@ by_az_county %>%
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = AREA), alpha = 0.5) +
   labs(
-    title = "Age Adjusted Incidence Rates by County",
-    subtitle = "Arizona; Year 2012-2016; all races and sexes combined",
+    title = "Overall Age Adjusted Incidence Rates by County",
+    subtitle = "Arizona; Year 2013-2017; all races and sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
-    caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
+    caption = "Source: U.S. Cancer Statistics 2001–2017 Public Use Research Database, November 2018 submission (2001–2017)."
   ) +
   theme_solarized()
 
@@ -294,17 +295,9 @@ incidence_catch_counties <- by_az_county %>%
          value = AGE_ADJUSTED_RATE) %>%
   arrange(desc(Pima))
 
-incidence_catch_counties <- write_csv("data/tidy/incidence_az_counties_uscs_2013-2017.csv")
+incidence_catch_counties
 
-testing <- full_join(incidence_table_uazcc, incidence_catch_counties) %>%
-  slice(2:4) %>%
-  gather(AZ, Catchment, `White Non-Hispanic`, `American Indian`, Black, Cochise, Pima, Pinal, `Santa Cruz`, Yuma,
-         key = "area",
-         value = "rate"
-         )
-
-ggplot(data = testing, mapping = aes(x = area, y = rate, fill = SITE)) +
-  geom_bar(stat = "identity", position = "dodge")
+incidence_catch_counties %>% write_csv("data/tidy/incidence_az_counties_uscs_2013-2017.csv")
 
 # mortality for catchment counties in descending order of rate
 mortality_catch_counties <- by_az_county %>%
@@ -337,7 +330,9 @@ mortality_catch_counties <- by_az_county %>%
          value = AGE_ADJUSTED_RATE) %>%
   arrange(desc(Pima)) 
 
-mortality_catch_counties <- write_csv("data/tidy/mortality_az_counties_uscs_2013-2017.csv")
+mortality_catch_counties
+
+mortality_catch_counties %>% write_csv("data/tidy/mortality_az_counties_uscs_2013-2017.csv")
 
 # for southern arizona ----
 # 1. by cancer
@@ -353,7 +348,7 @@ south_az <- c("Cochise", "Pima", "Pinal", "Santa Cruz", "Yuma")
 
 # for all races
 # for all sexes
-# years 2012-2016
+# years 2013-2017
 # all cancers in descending order
 # data table
 # unsure if the following crude rate calculation is statistically valid
@@ -365,7 +360,7 @@ by_az_county %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   summarise(
     COUNT = sum(COUNT),
@@ -375,7 +370,7 @@ by_az_county %>%
   arrange(desc(crude_rate)) %>%
   select(SITE, crude_rate) %>%
   kable(
-    caption = "For southern arizona only, Crude Incidence Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined",
+    caption = "For southern arizona only, Crude Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined",
     col.names = c("Cancer Site", "Crude Rate per 100,000")
   )
 
@@ -388,7 +383,7 @@ by_az_county %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined"
   ) %>%
   summarise(
@@ -401,7 +396,7 @@ by_az_county %>%
   ggplot() +
   geom_col(mapping = aes(x = crude_rate, y = reorder(SITE, crude_rate)), alpha = 0.5) +
   labs(
-    title = "Top 10 New Cancers in Southern AZ for Year 2012-2016",
+    title = "Top 10 New Cancers in Southern AZ for Year 2013-2017",
     subtitle = "for all races and sexes combined",
     x = "Crude Incidence Rate per 100,000",
     y = "",
@@ -412,7 +407,7 @@ by_az_county %>%
 # for each race ----
 # all sexes
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_az_county %>%
   drop_na() %>%
@@ -421,7 +416,7 @@ by_az_county %>%
     SEX == "Male and Female",
     AREA %in% south_az,
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   summarise(
@@ -432,7 +427,7 @@ by_az_county %>%
   arrange(desc(crude_rate)) %>%
   select(RACE, crude_rate) %>%
   kable(
-    caption = "Crude Rates by Race for Arizona; Year 2012-2016",
+    caption = "Crude Rates by Race for Arizona; Year 2013-2017",
     col.names = c("Race", "Crude Rate per 100,000")
   )
 
@@ -444,7 +439,7 @@ by_az_county %>%
     SEX == "Male and Female",
     AREA %in% south_az,
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   summarise(
@@ -457,7 +452,7 @@ by_az_county %>%
   geom_col(aes(x = crude_rate, y = reorder(RACE, crude_rate)), alpha = 0.5) +
   labs(
     title = "Incidence Rates by Race",
-    subtitle = "Southern Arizona; Year 2012-2016; all sexes combined",
+    subtitle = "Southern Arizona; Year 2013-2017; all sexes combined",
     x = "Crude Rate per 100,000",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -473,7 +468,7 @@ by_az_county %>%
 # for each sex ----
 # all races
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_az_county %>%
   group_by(SEX) %>%
@@ -481,13 +476,13 @@ by_az_county %>%
     RACE == "All Races",
     AREA %in% south_az,
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age Adjusted Incidence Rates by Sex for Arizona; Year 2012-2016",
+    caption = "Age Adjusted Incidence Rates by Sex for Arizona; Year 2013-2017",
     col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -498,7 +493,7 @@ by_state %>%
     RACE == "All Races",
     AREA == "Arizona",
     EVENT_TYPE == "Incidence",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -507,7 +502,7 @@ by_state %>%
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = SEX), alpha = 0.5) +
   labs(
     title = "Age Adjusted Incidence Rates by Sex",
-    subtitle = "Arizona; Year 2012-2016; all sexes combined",
+    subtitle = "Arizona; Year 2013-2017; all sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -530,7 +525,7 @@ by_az_county %>%
   ) %>%
   select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted incidence rates by Arizona county for years 2012-2016; all sexes, races, and cancer sites combined",
+    caption = "Age adjusted incidence rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
     col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -548,7 +543,7 @@ by_az_county %>%
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = AREA), alpha = 0.5) +
   labs(
     title = "Age Adjusted Incidence Rates by County",
-    subtitle = "Arizona; Year 2012-2016; all races and sexes combined",
+    subtitle = "Arizona; Year 2013-2017; all races and sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -567,7 +562,7 @@ by_az_county %>%
 
 # for all races
 # for all sexes
-# years 2012-2016
+# years 2013-2017
 # all cancers in descending order
 # data table
 by_state %>%
@@ -576,12 +571,12 @@ by_state %>%
     EVENT_TYPE == "Mortality",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016"
+    YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age-Adjusted Mortality Rates by Cancer Site, Years 2012-2016, All Races and Sexes Combined)",
+    caption = "Age-Adjusted Mortality Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
     col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -592,7 +587,7 @@ by_state %>%
     EVENT_TYPE == "Mortality",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -602,7 +597,7 @@ by_state %>%
   geom_errorbarh(aes(xmin = AGE_ADJUSTED_CI_LOWER, xmax = AGE_ADJUSTED_CI_UPPER)) +
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = SITE), alpha = 0.5) +
   labs(
-    title = "Top 10 Cancer Deaths in Arizona for Year 2012-2016",
+    title = "Top 10 Cancer Deaths in Arizona for Year 2013-2017",
     subtitle = "for all races and sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
@@ -618,7 +613,7 @@ az_top_ten_mortality <- by_state %>%
     EVENT_TYPE == "Mortality",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE != "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -631,7 +626,7 @@ az_top_ten_mortality <- unique(az_top_ten_mortality$SITE)
 # for each race ----
 # all sexes
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_state %>%
   group_by(RACE) %>%
@@ -639,13 +634,13 @@ by_state %>%
     SEX == "Male and Female",
     AREA == "Arizona",
     EVENT_TYPE == "Mortality",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(RACE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age Adjusted Incidence Rates by Race for Arizona; Year 2012-2016",
+    caption = "Age Adjusted Incidence Rates by Race for Arizona; Year 2013-2017",
     col.names = c("Race", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -656,7 +651,7 @@ by_state %>%
     SEX == "Male and Female",
     AREA == "Arizona",
     EVENT_TYPE == "Mortality",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -666,7 +661,7 @@ by_state %>%
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = RACE), alpha = 0.5) +
   labs(
     title = "Age Adjusted Mortality Rates by Race",
-    subtitle = "Arizona; Year 2012-2016; all sexes combined",
+    subtitle = "Arizona; Year 2013-2017; all sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -676,7 +671,7 @@ by_state %>%
 # for each sex ----
 # all races
 # all cancer sites combined
-# years 2012-2016
+# years 2013-2017
 # data table
 by_state %>%
   group_by(SEX) %>%
@@ -684,13 +679,13 @@ by_state %>%
     RACE == "All Races",
     AREA == "Arizona",
     EVENT_TYPE == "Mortality",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age Adjusted Mortality Rates by Sex for Arizona; Year 2012-2016",
+    caption = "Age Adjusted Mortality Rates by Sex for Arizona; Year 2013-2017",
     col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
@@ -701,7 +696,7 @@ by_state %>%
     RACE == "All Races",
     AREA == "Arizona",
     EVENT_TYPE == "Mortality",
-    YEAR == "2012-2016",
+    YEAR == "2013-2017",
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
@@ -710,7 +705,7 @@ by_state %>%
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = SEX), alpha = 0.5) +
   labs(
     title = "Age Adjusted Mortality Rates by Sex",
-    subtitle = "Arizona; Year 2012-2016; all sexes combined",
+    subtitle = "Arizona; Year 2013-2017; all sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -734,7 +729,7 @@ by_az_county %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2012-2016; all sexes, races, and cancer sites combined",
+    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
     col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -752,7 +747,7 @@ by_az_county %>%
   geom_col(aes(x = AGE_ADJUSTED_RATE, y = AREA), alpha = 0.5) +
   labs(
     title = "Age Adjusted Mortality Rates by County",
-    subtitle = "Arizona; Year 2012-2016; all races and sexes combined",
+    subtitle = "Arizona; Year 2013-2017; all races and sexes combined",
     x = "Age Adjusted Rate per 100,000 (95% Confidence Interval",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -789,7 +784,7 @@ by_az_county %>%
   ) %>%
   select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2012-2016; all sexes, races, and cancer sites combined",
+    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
     col.names = c("County", "Age Adjusted Rate per 100,000", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -807,7 +802,7 @@ by_az_county %>%
   geom_col(position = "dodge", alpha = 0.75) +
   labs(
     title = "Age Adjusted Mortality Rates",
-    subtitle = "Catchment; Year 2012-2016; all races combined; grouped by county and sex",
+    subtitle = "Catchment; Year 2013-2017; all races combined; grouped by county and sex",
     x = "Age Adjusted Rate per 100,000",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -827,7 +822,7 @@ by_az_county %>%
   ) %>%
   select(AREA, SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2012-2016; grouped by sex, all races and cancer sites combined",
+    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; grouped by sex, all races and cancer sites combined",
     col.names = c("County", "Sex", "Age Adjusted Rate per 100,000", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -847,7 +842,7 @@ by_az_county %>%
   slice(1:5) %>%
   select(AREA, SEX, SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2012-2016; all sexes, races",
+    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, races",
     col.names = c("County", "Sex", "Cancer", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -870,7 +865,7 @@ by_az_county %>%
   geom_col(position = "dodge", alpha = 0.75) +
   labs(
     title = "Age Adjusted Mortality Rates",
-    subtitle = "Catchment; Year 2012-2016; all races and sexes combined; grouped by county",
+    subtitle = "Catchment; Year 2013-2017; all races and sexes combined; grouped by county",
     x = "Age Adjusted Rate per 100,000",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -893,7 +888,7 @@ by_az_county %>%
   slice(1:5) %>%
   select(AREA, SEX, SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2012-2016; all sexes, Hispanic only",
+    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, Hispanic only",
     col.names = c("County", "Sex", "Cancer", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
   )
 
@@ -916,7 +911,7 @@ by_az_county %>%
   geom_col(position = "dodge", alpha = 0.75) +
   labs(
     title = "Age Adjusted Mortality Rates",
-    subtitle = "Catchment; Year 2012-2016; All sexes combined; Hispanic only",
+    subtitle = "Catchment; Year 2013-2017; All sexes combined; Hispanic only",
     x = "Age Adjusted Rate per 100,000",
     y = "",
     caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute."
@@ -953,7 +948,7 @@ incidence_USA <- read_rds("data/tidy/USCS_by_cancer.rds")
 
 incidence_USA_for_UAZCC <- incidence_USA %>%
   drop_na() %>%
-  filter(YEAR == "2012-2016",
+  filter(YEAR == "2013-2017",
          SEX == "Male and Female",
          RACE == "All Races",
          EVENT_TYPE == "Incidence",
@@ -967,7 +962,7 @@ incidence_USA_for_UAZCC <- incidence_USA %>%
 incidence_USA_for_UAZCC %>%
   kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
         caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.",
-        lable = "Cancer Incidence, USA, 2012-2016")
+        lable = "Cancer Incidence, USA, 2013-2017")
 
 # Incidence for UAZCC Characterization AZ ----
 incidence_AZ <- read_rds("data/tidy/USCS_by_state.rds")
@@ -975,7 +970,7 @@ incidence_AZ <- read_rds("data/tidy/USCS_by_state.rds")
 incidence_AZ_for_UAZCC <- incidence_AZ %>%
   drop_na() %>%
   filter(AREA == "Arizona",
-         YEAR == "2012-2016",
+         YEAR == "2013-2017",
          RACE == "All Races",
          SEX == "Male and Female",
          EVENT_TYPE == "Incidence",
@@ -989,7 +984,7 @@ incidence_AZ_for_UAZCC <- incidence_AZ %>%
 incidence_AZ_for_UAZCC %>%
   kable(col.names = c("Cancer Type", "Age Adjusted Rate per 100,000"),
         caption = "Source: National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.",
-        lable = "Cancer Incidence, AZ, 2012-2016")
+        lable = "Cancer Incidence, AZ, 2013-2017")
 
 # combine both USA and AZ age adjusted rate tables 
 combined_incidence_USA_AZ_for_UAZCC <- full_join(incidence_USA_for_UAZCC, incidence_AZ_for_UAZCC) %>% 
