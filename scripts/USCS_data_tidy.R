@@ -11,24 +11,10 @@ library(here)
 library(tidyverse)
 library(purrr)
 library(stringr)
-library(dataMaid)
+# library(dataMaid)
 
 # source citation ----
 # National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.
-
-# # download data from source
-# # download dataset 2016 ----
-# # set values
-# url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2016-ASCII.zip"
-# path_zip <- "data/raw"
-# path_unzip <- "data/raw/USCS_1999-2016"
-# zip_file <- "USCS_1999-2016_ASCII.zip"
-# # use curl to download
-# curl::curl_download(url, destfile = paste(path_zip, zip_file, sep = "/"))
-# # set value
-# zipped_file <- "data/raw/USCS_1999-2016_ASCII.zip"
-# # unzip to folder
-# unzip(zipped_file, exdir = path_unzip)
 
 # download dataset 2016 ----
 # set values
@@ -81,7 +67,7 @@ uscs_list_of <- distinct(by_cancer, SITE)
 write_rds(by_cancer, "data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
 
 # use datamaid package to generate codebook
-makeCodebook(by_cancer, file = "data/tidy/codebook_USCS_by_cancer.Rmd")
+# makeCodebook(by_cancer, file = "data/tidy/codebook_USCS_by_cancer.Rmd")
 
 # read data
 # United States Cancer Statistics
@@ -111,7 +97,7 @@ by_age <- read_delim("data/raw/USCS_1999-2017/BYAGE.TXT",
 write_rds(by_age, "data/tidy/USCS_by_age.rds")
 
 # use datamaid package to generate codebook
-makeCodebook(by_age, file = "data/tidy/codebook_USCS_by_age.Rmd")
+# makeCodebook(by_age, file = "data/tidy/codebook_USCS_by_age.Rmd")
 
 # read data
 # United States Cancer Statistics
@@ -146,7 +132,7 @@ by_state <- by_state %>% drop_na()
 write_rds(by_state, "data/tidy/USCS_by_state.rds")
 
 # use datamaid package to generate codebook
-makeCodebook(by_state, file = "data/tidy/codebook_USCS_by_state.Rmd")
+# makeCodebook(by_state, file = "data/tidy/codebook_USCS_by_state.Rmd")
 
 # read data
 # United States Cancer Statistics
@@ -202,7 +188,7 @@ by_az_county <- by_az_county %>%
 write_rds(by_az_county, "data/tidy/USCS_by_az_county.rds")
 
 # use datamaid package to generate codebook
-makeCodebook(by_az_county, file = "data/tidy/codebook_USCS_by_az_county.Rmd")
+# makeCodebook(by_az_county, file = "data/tidy/codebook_USCS_by_az_county.Rmd")
 
 # exploratory data analysis
 # explore by_age ----
