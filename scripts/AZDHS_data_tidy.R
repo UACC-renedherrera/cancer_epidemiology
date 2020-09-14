@@ -44,6 +44,8 @@ incidence_az <- read_csv("data/raw/AZDHS/query_incidence_az_2013-2017.csv",
   )
 )
 
+incidence_az
+
 # add variables to identify dataset
 incidence_az <- incidence_az %>%
   mutate(
@@ -94,6 +96,8 @@ incidence_catch <- read_csv("data/raw/AZDHS/query_catchment_incidence_2013-2017.
   ),
 )
 
+incidence_catch
+
 # add variables to identify dataset
 incidence_catch <- incidence_catch %>%
   mutate(
@@ -102,6 +106,8 @@ incidence_catch <- incidence_catch %>%
     source = "AZDHS IBIS Query System",
     area = "Catchment"
   )
+
+incidence_catch
 
 # save dataset to file
 write_rds(azdhs_catch_incidence_2017, "data/tidy/incidence_az_catchment_azdhs_2013-2017_by_cancer.rds")
@@ -142,6 +148,8 @@ incidence_catch_white <- read_csv("data/raw/AZDHS/query_incidence_catch_white_20
   ),
 )
 
+incidence_catch_white
+
 # add variables to identify dataset
 incidence_catch_white <- incidence_catch_white %>%
   mutate(
@@ -150,6 +158,8 @@ incidence_catch_white <- incidence_catch_white %>%
     source = "AZDHS IBIS Query System",
     area = "Catchment"
   )
+
+incidence_catch_white
 
 write_rds(incidence_catch_white, "data/tidy/incidence_az_catchment_azdhs_2013-2017_white_by_cancer.rds")
 
@@ -198,6 +208,8 @@ incidence_catch_hispanic <- incidence_catch_hispanic %>%
     area = "Catchment"
   )
 
+incidence_catch_hispanic
+
 write_rds(incidence_catch_hispanic, "data/tidy/incidence_az_catchment_azdhs_2013-2017_hispanic_by_cancer.rds")
 
 ############ Incidence for UAZCC Catchment American Indian ####################
@@ -244,6 +256,8 @@ incidence_catch_ai <- incidence_catch_ai %>%
     source = "AZDHS IBIS Query System",
     area = "Catchment"
   )
+
+incidence_catch_ai
 
 write_rds(incidence_catch_ai, "data/tidy/incidence_az_catchment_azdhs_2013-2017_ai_by_cancer.rds")
 
