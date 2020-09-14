@@ -460,11 +460,6 @@ by_az_county %>%
   theme_solarized()
 
 
-# start here
-# still need to change from "for az" to "southern az"
-
-
-
 # for each sex ----
 # all races
 # all cancer sites combined
@@ -480,10 +475,10 @@ by_az_county %>%
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
-  select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
+  select(AREA, SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
   kable(
     caption = "Age Adjusted Incidence Rates by Sex for Arizona; Year 2013-2017",
-    col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+    col.names = c("County", "Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
   )
 
 # bar chart
@@ -799,7 +794,7 @@ by_az_county %>%
     SITE == "All Cancer Sites Combined"
   ) %>%
   ggplot(aes(x = AGE_ADJUSTED_RATE, y = reorder(AREA, AGE_ADJUSTED_RATE), fill = SEX)) +
-  geom_col(position = "dodge", alpha = 0.75) +
+  geom_col(position = "dodge", alpha = 0.5) +
   labs(
     title = "Age Adjusted Mortality Rates",
     subtitle = "Catchment; Year 2013-2017; all races combined; grouped by county and sex",
