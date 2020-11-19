@@ -33,11 +33,11 @@ by_state %>%
     YEAR == "2013-2017"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
-  select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
-    col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
-  )
+  select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
+  # kable(
+  #   caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
+  #   col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+  # )
 
 # data table
 # top five incidence cancers only
@@ -52,11 +52,11 @@ by_state %>%
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:6) %>%
-  select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
-    col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
-  )
+  select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) #%>%
+  # kable(
+  #   caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
+  #   col.names = c("Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+  # )
 
 # data table
 # top five incidence cancers only
@@ -73,11 +73,11 @@ by_state %>%
   group_by(SEX) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   slice(1:5) %>%
-  select(SEX, SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
-    col.names = c("Sex", "Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
-  )
+  select(SEX, SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
+  # kable(
+  #   caption = "Arizona Age-Adjusted Incidence Rates by Cancer Site, Years 2013-2017, All Races and Sexes Combined)",
+  #   col.names = c("Sex", "Cancer Site", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+  # )
 
 # bar chart
 by_state %>%
@@ -136,11 +136,11 @@ by_state %>%
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
-  select(RACE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Overall Age Adjusted Incidence Rates by Race for Arizona; Year 2013-2017",
-    col.names = c("Race", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
-  )
+  select(RACE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) #%>%
+  # kable(
+  #   caption = "Overall Age Adjusted Incidence Rates by Race for Arizona; Year 2013-2017",
+  #   col.names = c("Race", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+  # )
 
 # bar chart
 by_state %>%
@@ -181,11 +181,11 @@ by_state %>%
     SITE == "All Cancer Sites Combined"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
-  select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Overall Age Adjusted Incidence Rates by Sex for Arizona; Year 2013-2017",
-    col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
-  )
+  select(SEX, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
+  # kable(
+  #   caption = "Overall Age Adjusted Incidence Rates by Sex for Arizona; Year 2013-2017",
+  #   col.names = c("Sex", "Age Adjusted Rate", "95% CI Lower", "95% CI Upper")
+  # )
 
 # bar chart
 by_state %>%
@@ -237,11 +237,11 @@ by_az_county %>%
     SEX == "Male and Female",
     SITE == "All Cancer Sites Combined"
   ) %>%
-  select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Overall Age adjusted incidence rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
-    col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
-  )
+  select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
+  # kable(
+  #   caption = "Overall Age adjusted incidence rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
+  #   col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
+  # )
 
 # bar chart
 by_az_county %>%
