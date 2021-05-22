@@ -55,10 +55,10 @@ incidence_usa <- incidence_usa %>%
 incidence_az <- read_rds("data/tidy/incidence_az_catchment_azdhs_2013-2017_by_cancer.rds")
 
 incidence_az <- incidence_az %>%
-  mutate(cancer = case_when(
-    cancer == "All" ~ "Overall", #old ~ new
-    cancer == "Oral Cavity" ~ "Oral Cavity and Pharynx",
-    TRUE ~ as.character(cancer)
+  mutate("cancer" = case_when(
+    Cancer == "All" ~ "Overall", #old ~ new
+    Cancer == "Oral Cavity" ~ "Oral Cavity and Pharynx",
+    TRUE ~ as.character(Cancer)
   ))
 
 # combine usa, az, catchment, race
