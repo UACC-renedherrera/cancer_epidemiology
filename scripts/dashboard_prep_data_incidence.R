@@ -67,7 +67,8 @@ usa_by_cancer %>%
 usa_by_cancer_focus <- usa_by_cancer %>%
   filter(YEAR %in% recent,
          SITE %in% focus_cancer,
-         RACE %in% focus_race) %>%
+         RACE %in% focus_race,
+         EVENT_TYPE == "Incidence") %>%
   mutate(AREA = area)
 
 # overall usa incidence by cancer ----
@@ -90,16 +91,17 @@ az_by_cancer_focus <- state_by_cancer %>%
   filter(AREA == "Arizona",
          YEAR %in% recent,
          SITE %in% focus_cancer,
-         RACE %in% focus_race) %>%
+         RACE %in% focus_race,
+         EVENT_TYPE == "Incidence") %>%
   mutate(source = "USCS")
 
 incidence_table_usa_az <- bind_rows(usa_by_cancer_focus, az_by_cancer_focus) %>%
-  select(16,2:4,6)
+  select(16,2:4,8)
 
 write_rds(incidence_table_usa_az, "data/tidy/dashboard_incidence_table_usa_az.rds")
 
+write_rds(incidence_table_usa_az, "communication/shiny_apps/dashboard_incidence_tables/data/incidence_az_catch_2013-2017_table.rds")
+
 
 # uazcc
-
-incidence_table_uazcc <- read_rds("data/tidy/incidence_az_catch_2013-2017_table.rds")
 
