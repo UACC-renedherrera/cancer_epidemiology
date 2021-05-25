@@ -55,3 +55,4 @@ communication/dashboards/rsconnect/
 *.png
 *.svg
 *.dcf
+*.rds
