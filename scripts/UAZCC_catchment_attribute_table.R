@@ -75,6 +75,7 @@ incidence_table <- incidence %>%
 
 write_csv(incidence_table, "data/tidy/uazcc_incidence_table_2013-2017.csv")
 
+# save for use in shiny app
 write_rds(incidence_table, "communication/shiny_apps/dashboard_incidence_tables/data/incidence_usa_az_catchment.rds")
 
 
