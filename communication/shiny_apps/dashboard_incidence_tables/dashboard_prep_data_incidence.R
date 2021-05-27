@@ -1,34 +1,25 @@
-# packages 
-library(here)
-library(tidyverse)
+# Prepare data for display on data table 
+# data table must display age adjusted cancer incidence rates of most recent 5 year average 
+# René Dario Herrera 
+# University of Arizona Cancer Center
+# renedherrera at email dot arizona dot edu 
+# May 2021
 
-# read data 
-# overall usa incidence by cancer ----
-usa_by_cancer <- read_rds("data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
+# | Geography | Race | Sex | Site | Age Adjusted Incidene Rate | 
 
-# inspect 
-glimpse(usa_by_cancer)
+# Geography:
+geo_of_interest <- c("USA", "AZ", "Catchment", "Cochise County", "Pima County", "Pinal County", "Santa Cruz County", "Yuma")
 
-usa_by_cancer %>%
-  distinct(RACE)
+# Race: 
+race_of_interest <- c("All Races", "American Indian/Alaska Native", "Hispanic", "White")
 
-usa_by_cancer %>%
-  distinct(SITE) %>%
-  print(n = nrow(usa_by_cancer))
+# Sex: 
+sex_of_interest <- c("Male and Female", "Female", "Male")
 
-usa_by_cancer %>%
-  distinct(YEAR)
-
-# filter to race of interest 
-focus_race <- c("All Races", "American Indian/Alaska Native", "Hispanic", "White")
-
-usa_by_cancer %>%
-  filter(RACE %in% focus_race)
-
-# filter to cancer of interest 
+# Cancer Site: 
 # source: Genitourinary Cancers https://cancer.osu.edu/for-patients-and-caregivers/learn-about-cancers-and-treatments/cancers-conditions-and-treatment/cancer-types/genitourinary-cancers
 # source: Gastrointestinal Cancers https://cancer.osu.edu/for-patients-and-caregivers/learn-about-cancers-and-treatments/cancers-conditions-and-treatment/cancer-types/gastrointestinal-cancers
-focus_cancer <- c("All Cancer Sites Combined", 
+cancer_site_of_interest <- c("All Cancer Sites Combined", 
                   "Melanomas of the Skin",
                   "Lung and Bronchus",
                   "Female Breast",
@@ -52,12 +43,47 @@ focus_cancer <- c("All Cancer Sites Combined",
                   "Prostate",
                   "Male Genital System",
                   "Female Genital System"
-                  )
+)
+
+# load packages ----
+library(here)
+library(tidyverse)
+
+# read data 
+# overall usa incidence by cancer ----
+usa_by_cancer <- read_rds("data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
+
+# inspect 
+glimpse(usa_by_cancer)
+
+# see which values are present 
+usa_by_cancer %>%
+  distinct(SEX)
+
+usa_by_cancer %>%
+  distinct(RACE)
+
+usa_by_cancer %>%
+  distinct(SITE) %>%
+  print(n = nrow(usa_by_cancer))
+
+usa_by_cancer %>%
+  distinct(YEAR)
+
+# filter to race of interest 
+focus_race <- race_of_interest
+
+usa_by_cancer %>%
+  filter(RACE %in% focus_race)
+
+# filter to cancer of interest 
+focus_cancer <- cancer_site_of_interest
 
 usa_by_cancer %>%
   filter(SITE %in% focus_cancer)
 
 # filter to most recent five year average 
+
 recent <- "2013-2017"
 
 usa_by_cancer %>%
@@ -70,7 +96,7 @@ usa_by_cancer_focus <- usa_by_cancer %>%
          RACE %in% focus_race) %>%
   mutate(AREA = area)
 
-# overall usa incidence by cancer ----
+# overall arizona incidence by cancer ----
 state_by_cancer <- read_rds("data/tidy/USCS_by_state.rds")
 
 # filter to race of interest 
@@ -98,8 +124,9 @@ incidence_table_usa_az <- bind_rows(usa_by_cancer_focus, az_by_cancer_focus) %>%
 
 write_rds(incidence_table_usa_az, "data/tidy/dashboard_incidence_table_usa_az.rds")
 
-
 # uazcc
 
 incidence_table_uazcc <- read_rds("communication/shiny_apps/dashboard_incidence_tables/data/incidence_az_catch_2013-2017_table.rds")
+
+# Arizona counties incidence by cancer
 
