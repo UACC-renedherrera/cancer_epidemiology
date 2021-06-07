@@ -39,13 +39,15 @@ vignettes/*.pdf
 .Renviron
 
 # data folder
-data/raw
-data/tidy
+data/
 
 # communication folder
-communication/reports
+communication/reports/
 communication/dashboards/*.html
 communication/dashboards/rsconnect/
+
+# figures folder
+figures/
 
 # file types to ignore
 *.ppt
