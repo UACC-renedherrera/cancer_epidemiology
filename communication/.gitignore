@@ -1,0 +1,11 @@
+# ignore folders
+dashboards/rsconnect/
+reports/
+shiny_apps/rsconnect/
+shiny_apps/dashboard_incidence_tables/data/
+shiny_apps/dashboard_incidence_tables/rsconnect/
+
+# ignore file types
+*.html
+*.rds
+*.pptx
