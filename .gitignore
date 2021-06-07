@@ -41,11 +41,6 @@ vignettes/*.pdf
 # data folder
 data/
 
-# communication folder
-communication/reports/
-communication/dashboards/*.html
-communication/dashboards/rsconnect/
-
 # figures folder
 figures/
 
