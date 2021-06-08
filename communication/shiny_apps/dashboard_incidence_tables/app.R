@@ -3,8 +3,7 @@ library(shiny)
 library(tidyverse)
 
 # Load data ---- 
-# incidence_table_usa_az <- read_rds("communication/shiny_apps/dashboard_incidence_tables/data/incidence_az_catch_2013-2017_table.rds")
-incidence_table_usa_az <- read_rds("data/incidence_az_catch_2013-2017_table.rds")
+incidence_table <- read_rds("data/incidence_table.rds")
 
 # Source helper functions ---- 
 # source("communication/shiny_apps/dashboard_incidence_tables/dashboard_prep_data_incidence.R")
@@ -16,28 +15,28 @@ ui <- fluidPage(
     # Create a new Row in the UI for selectInputs
     fluidRow(
         column(4,
-               selectInput("RACE",
+               selectInput("race",
                            "Race:",
                            c("All",
-                             unique(as.character(incidence_table_usa_az$RACE))))
+                             unique(as.character(incidence_table$race))))
         ),
         column(4,
-               selectInput("SEX",
+               selectInput("sex",
                            "Sex:",
                            c("All",
-                             unique(as.character(incidence_table_usa_az$SEX))))
+                             unique(as.character(incidence_table$sex))))
         ),
         column(4,
-               selectInput("SITE",
+               selectInput("site",
                            "Cancer Site:",
                            c("All",
-                             unique(as.character(incidence_table_usa_az$SITE))))
+                             unique(as.character(incidence_table$site))))
         ),
         column(4,
-               selectInput("AREA",
+               selectInput("area",
                            "Geography:",
                            c("All",
-                             unique(as.character(incidence_table_usa_az$AREA))))
+                             unique(as.character(incidence_table$area))))
         )
     ),
     # Create a new row for the table.
@@ -50,18 +49,18 @@ server <- function(input, output) {
 
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- incidence_table_usa_az
-        if (input$RACE != "All") {
-            data <- data[data$RACE == input$RACE, ]
+        data <- incidence_table
+        if (input$race != "All") {
+            data <- data[data$race == input$race, ]
         }
-        if (input$SEX != "All") {
-            data <- data[data$SEX == input$SEX, ]
+        if (input$sex != "All") {
+            data <- data[data$sex == input$sex, ]
         }
-        if (input$SITE != "All") {
-            data <- data[data$SITE == input$SITE, ]
+        if (input$site != "All") {
+            data <- data[data$site == input$site, ]
         }
-        if (input$AREA != "All") {
-            data <- data[data$AREA == input$AREA, ]
+        if (input$area != "All") {
+            data <- data[data$area == input$area, ]
         }
         data
     },
