@@ -319,6 +319,9 @@ incidence_table <- bind_rows(
   incidence_catch_black
 )
 
+#### write RDS for shiny app #### 
+write_rds(incidence_table, "communication/shiny_apps/dashboard_incidence_tables/data/incidence_az_catch_2013-2017_table.rds")
+
 ############ output incidence table ###########################################
 
 str(incidence_table)
