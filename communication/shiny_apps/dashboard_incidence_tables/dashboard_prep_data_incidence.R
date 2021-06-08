@@ -95,7 +95,8 @@ uscs_usa_by_cancer %>%
 
 # apply all filters 
 uscs_usa_by_cancer_focus <- uscs_usa_by_cancer %>%
-  filter(year %in% recent,
+  filter(event_type == "Incidence",
+         year %in% recent,
          site %in% focus_cancer,
          race %in% focus_race) %>%
   mutate(source = "USCS") %>%
@@ -119,7 +120,8 @@ uscs_az_by_cancer %>%
 
 # apply all filters 
 az_by_cancer_focus <- uscs_az_by_cancer %>%
-  filter(area == "Arizona",
+  filter(event_type == "Incidence",
+         area == "Arizona",
          year %in% recent,
          site %in% focus_cancer,
          race %in% focus_race) %>%
@@ -135,7 +137,8 @@ glimpse(uscs_az_counties_by_cancer)
 
 # apply filters
 uscs_az_counties_by_cancer_by_focus <- uscs_az_counties_by_cancer %>%
-  filter(year %in% recent,
+  filter(event_type == "Incidence",
+         year %in% recent,
          site %in% focus_cancer,
          race %in% focus_race) %>%
   mutate(source = "USCS") %>%
@@ -221,7 +224,8 @@ azdhs_uazcc_catchment_incidence
 # combine uscs and adhs ---- 
 incidence_table <- bind_rows(uscs_incidence,
                              azdhs_uazcc_catchment_incidence) %>%
-  drop_na()
+  drop_na() %>%
+  select(area, race, sex, site, age_adjusted_rate, source)
 
 # write to rds to use in shiny app 
 write_rds(incidence_table, "communication/shiny_apps/dashboard_incidence_tables/data/incidence_table.rds")
