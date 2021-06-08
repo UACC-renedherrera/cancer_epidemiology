@@ -39,10 +39,10 @@ vignettes/*.pdf
 .Renviron
 
 # data folder
-data/
+data
 
 # figures folder
-figures/
+figures
 
 # file types to ignore
 *.ppt
