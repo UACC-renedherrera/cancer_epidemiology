@@ -4,7 +4,12 @@ library(here)
 library(tidyverse)
 library(ggthemes)
 library(knitr)
+library(janitor)
+library(tigris)
+library(sf)
 
+# options
+options(tigris_use_cache = TRUE)
 
 # use data to replicate State Cancer Profiles but for first Arizona and then five county catchment only
 # incidence ----
@@ -215,19 +220,31 @@ by_state %>%
 
 # by AZ county ----
 # read data to environment
-by_az_county <- read_rds("data/tidy/USCS_by_az_county.rds")
+by_az_county <- read_rds("data/tidy/USCS_by_az_county.rds") %>%
+  clean_names()
 
 # examine the data 
 str(by_az_county)
-unique(by_az_county$RACE)
-unique(by_az_county$AREA)
+glimpse(by_az_county)
+unique(by_az_county$race)
+unique(by_az_county$area)
 
-by_az_county$RACE <- ordered(by_az_county$RACE, levels = c("All Races",
-                                                           "White",
-                                                           "Hispanic",
-                                                           "American Indian/Alaska Native",
-                                                           "Black",
-                                                           "Asian/Pacific Islander"))
+# what's needed to make a choropleth of rates for AZ counties?
+# geospatial data from tigris 
+az_counties_sf <- counties(state = "AZ") %>%
+  clean_names()
+class(az_counties_sf)
+glimpse(az_counties_sf)
+
+by_az_county_sf <- geo_join(spatial_data = az_counties_sf,
+         data_frame = by_az_county,
+         by_sp = "geoid",
+         by_df = "fips",
+         how = "inner")
+
+write_rds(by_az_county_sf, "data/tidy/ucsc_by_county_spatial.rds")
+
+
 # data table
 by_az_county %>%
   group_by(AREA) %>%
@@ -988,3 +1005,17 @@ combined_incidence_USA_AZ_for_UAZCC <- full_join(incidence_USA_for_UAZCC, incide
 write_rds(combined_incidence_USA_AZ_for_UAZCC, "data/tidy/USCS_incidence_2012_2016_USA_AZ.rds")
 
 combined_incidence_USA_AZ_for_UAZCC %>% kable()
+
+# USCS cancer data by state ####
+
+uscs_by_state <- read_rds("data/tidy/USCS_by_state.rds") %>%
+  clean_names()
+
+glimpse(uscs_by_state)
+
+uscs_az <- uscs_by_state %>%
+  filter(area == "Arizona")
+
+str(uscs_az)
+
+write_rds(uscs_az, "data/tidy/uscs_by_state_az.rds")
