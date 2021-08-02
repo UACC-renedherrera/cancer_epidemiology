@@ -4,6 +4,8 @@
 library(here)
 library(tidyverse)
 library(ggthemes)
+library(gt)
+
 
 # blue palette
 uaz_blues3 <- c("#deebf7", "#9ecae1", "#3182bd")
@@ -12,6 +14,50 @@ uaz_blues4 <- c("#eff3ff", "#bdd7e7", "#6baed6", "#2171b5")
 # red palette 
 uaz_reds3 <- c("#fee0d2", "#fc9272", "#de2d26")
 uaz_reds4 <- c("#fee5d9", "#fcae91", "#fb6a4a", "#cb181d")
+
+# red and blue palette 
+uaz_red_blue <- c("#AB0520", "#0C234B")
+
+# theme ####
+# set consistent theme for graphics & data visualizations
+theme_uazcc_brand <- theme_clean(base_size = 14) +
+  theme(
+    text = element_text(
+      family = "sans",
+      # face = "bold",
+      color = "#001C48",
+      # size = rel(1.5)
+    ),
+    panel.background = element_rect(fill = "white"),
+    panel.grid = element_line(color = "#1E5288"),
+    plot.background = element_rect(fill = "#EcE9EB"),
+    aspect.ratio = 9 / 16,
+    legend.background = element_rect(fill = "white"),
+    legend.position = "right",
+    plot.caption = element_text(size = 8),
+    # plot.subtitle = element_text(size = 12),
+    # plot.title = element_text(size = 14),
+    strip.background = element_rect(fill = "#EcE9EB")
+  )
+
+# spatial
+theme_uazcc_brand_spatial <- theme_map(base_size = 14) +
+  theme(
+    text = element_text(
+      family = "sans",
+      # face = "bold",
+      color = "#001C48"
+    ),
+    # panel.background = element_rect(fill = "white"),
+    # panel.grid = element_line(color = "#1E5288"),
+    # plot.background = element_rect(fill = "#EcE9EB"),
+    # legend.background = element_rect(fill = "white"),
+    legend.position = "right",
+    plot.caption = element_text(size = 8),
+    # plot.subtitle = element_text(size = 14),
+    plot.title = element_text(face = "bold"),
+    strip.background = element_rect(fill = "#EcE9EB")
+  )
 
 
 # read incidence data for 2013-2017
@@ -857,3 +903,192 @@ ggsave("mortality_disparity_usa_az_catchment_ai.svg",
 # Rate of New tobacco -associated Cancers by Age Group (years)
 # tobacco -associated Cancers
 # All tobacco -associated Cancers, Male and Female, United States, 2017
+
+# Cancer incidence and death rates by race & ethnicity, both sexes, all types of cancer ####
+uscs_az <- read_rds("data/tidy/uscs_by_state_az.rds")
+
+glimpse(uscs_az)
+
+# bar chart 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Male and Female",
+         site == "All Cancer Sites Combined") %>%
+  ggplot(mapping = aes(x = race, y = age_adjusted_rate, fill = event_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
+  coord_flip() +
+  labs(title = "Cancer Incidence and Death Rates",
+       subtitle = "2014-2018, By Race and Ethnicity, Both Sexes",
+       x = "Race and Ethnicity",
+       y = "Age adjusted rate per 100,000",
+       fill = "",
+       caption = "Source: U.S. Cancer Statistics 2001–2018") +
+  scale_fill_manual(values = uaz_red_blue) +
+  theme_uazcc_brand
+
+  ggsave(
+    filename = "figures/charts/cancer_incidence_death_rates_by_race.svg",
+    device = "svg"
+  )
+
+# data table 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Male and Female",
+         site == "All Cancer Sites Combined") %>%
+  select(event_type, race, age_adjusted_rate) %>%
+  arrange(event_type, race) %>%
+  group_by(event_type) %>%
+  gt() %>%
+  tab_header(
+    title = "Cancer Incidence and Death Rates",
+    subtitle = "2014-2018, By Race and Ethnicity, Both Sexes"
+  ) %>%
+  cols_label(race = "Race",
+             age_adjusted_rate = "Age adjusted rate") %>%
+  tab_source_note(source_note = "Source: U.S. Cancer Statistics 2001–2018") %>%
+  gtsave(
+    filename = "figures/charts/cancer_incidence_death_rates_table_by_race.png",
+    expand = 10
+  )
+
+# Cancer incidence and death rates by race & ethnicity, male, all types of cancer ####
+# bar chart 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Male",
+         site == "All Cancer Sites Combined") %>%
+  ggplot(mapping = aes(x = race, y = age_adjusted_rate, fill = event_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
+  coord_flip() +
+  labs(title = "Cancer Incidence and Death Rates",
+       subtitle = "2014-2018, By Race and Ethnicity, Male",
+       x = "Race and Ethnicity",
+       y = "Age adjusted rate per 100,000",
+       fill = "",
+       caption = "Source: U.S. Cancer Statistics 2001–2018") +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_uazcc_brand
+
+ggsave(
+  filename = "figures/charts/cancer_incidence_death_rates_by_race_male.svg",
+  device = "svg"
+)
+
+# data table 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Male",
+         site == "All Cancer Sites Combined") %>%
+  select(event_type, race, age_adjusted_rate) %>%
+  arrange(event_type, race) %>%
+  group_by(event_type) %>%
+  gt() %>%
+  tab_header(
+    title = "Cancer Incidence and Death Rates",
+    subtitle = "2014-2018, By Race and Ethnicity, Male"
+  ) %>%
+  cols_label(race = "Race",
+             age_adjusted_rate = "Age adjusted rate") %>%
+  tab_source_note(source_note = "Source: U.S. Cancer Statistics 2001–2018") %>%
+  gtsave(
+    filename = "figures/charts/cancer_incidence_death_rates_table_by_race_male.png",
+    expand = 10
+  )
+
+# Cancer incidence and death rates by race & ethnicity, female, all types of cancer ####
+# bar chart 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Female",
+         site == "All Cancer Sites Combined") %>%
+  ggplot(mapping = aes(x = race, y = age_adjusted_rate, fill = event_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
+  coord_flip() +
+  labs(title = "Cancer Incidence and Death Rates",
+       subtitle = "2014-2018, By Race and Ethnicity, Female",
+       x = "Race and Ethnicity",
+       y = "Age adjusted rate per 100,000",
+       fill = "",
+       caption = "Source: U.S. Cancer Statistics 2001–2018") +
+  scale_fill_brewer(palette = "Pastel2") +
+  theme_uazcc_brand
+
+ggsave(
+  filename = "figures/charts/cancer_incidence_death_rates_by_race_female.svg",
+  device = "svg"
+)
+
+# data table 
+uscs_az %>%
+  filter(year == "2014-2018",
+         sex == "Male",
+         site == "All Cancer Sites Combined") %>%
+  select(event_type, race, age_adjusted_rate) %>%
+  arrange(event_type, race) %>%
+  group_by(event_type) %>%
+  gt() %>%
+  tab_header(
+    title = "Cancer Incidence and Death Rates",
+    subtitle = "2014-2018, By Race and Ethnicity, Male"
+  ) %>%
+  cols_label(race = "Race",
+             age_adjusted_rate = "Age adjusted rate") %>%
+  tab_source_note(source_note = "Source: U.S. Cancer Statistics 2001–2018") %>%
+  gtsave(
+    filename = "figures/charts/cancer_incidence_death_rates_table_by_race_female.png",
+    expand = 10
+  )
+
+# map of incidence and mortality ####
+by_az_county_sf <- read_rds("data/tidy/ucsc_by_county_spatial.rds")
+
+glimpse(by_az_county_sf)
+class(by_az_county_sf)
+
+by_az_county_sf %>%
+  filter(event_type == "Incidence",
+         race == "All Races",
+         sex == "Male and Female",
+         site == "All Cancer Sites Combined") %>%
+  ggplot() +
+  geom_sf(mapping = aes(fill = age_adjusted_rate)) +
+  labs(title = "Cancer Incidence Rates",
+       subtitle = "2014-2018, By AZ County, Both Sexes, All Races",
+       x = "",
+       y = "",
+       fill = "Age adjusted rate per 100,000",
+       caption = "Source: U.S. Cancer Statistics 2001–2018") +
+  scale_fill_viridis_c() +
+  theme_uazcc_brand_spatial
+
+ggsave(
+  filename = "figures/maps/uscs_incidence_by_county.svg",
+  device = "svg",
+  scale = 2
+)
+
+by_az_county_sf %>%
+  filter(event_type == "Mortality",
+         race == "All Races",
+         sex == "Male and Female",
+         site == "All Cancer Sites Combined") %>%
+  ggplot() +
+  geom_sf(mapping = aes(fill = age_adjusted_rate)) +
+  labs(title = "Cancer Mortality Rates",
+       subtitle = "2014-2018, By AZ County, Both Sexes, All Races",
+       x = "",
+       y = "",
+       fill = "Age adjusted rate per 100,000",
+       caption = "Source: U.S. Cancer Statistics 2001–2018") +
+  scale_fill_viridis_c() +
+  theme_uazcc_brand_spatial
+
+ggsave(
+  filename = "figures/maps/uscs_mortality_by_county.svg",
+  device = "svg",
+  scale = 2
+)
