@@ -11,30 +11,31 @@ library(here)
 library(tidyverse)
 library(purrr)
 library(stringr)
+library(janitor)
 # library(dataMaid)
 
 # source citation ----
 # National Program of Cancer Registries and Surveillance, Epidemiology, and End Results SEER*Stat Database: NPCR and SEER Incidence – U.S. Cancer Statistics 2001–2016 Public Use Research Database, November 2018 submission (2001–2016), United States Department of Health and Human Services, Centers for Disease Control and Prevention and National Cancer Institute. Released June 2019, based on the November 2018 submission. Accessed at www.cdc.gov/cancer/uscs/public-use.
 
-# download dataset 2016 ----
+# download dataset 2018 ----
 # set values
-url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2017-ASCII.zip"
+url <- "https://www.cdc.gov/cancer/uscs/USCS-1999-2018-ASCII.zip"
 path_zip <- "data/raw"
-path_unzip <- "data/raw/USCS_1999-2017"
-zip_file <- "USCS_1999-2017_ASCII.zip"
+path_unzip <- "data/raw/USCS_1999-2018"
+zip_file <- "USCS_1999-2018_ASCII.zip"
 # use curl to download
 curl::curl_download(url, destfile = paste(path_zip, zip_file, sep = "/"))
 # set value
-zipped_file <- "data/raw/USCS_1999-2017_ASCII.zip"
+zipped_file <- "data/raw/USCS_1999-2018_ASCII.zip"
 # unzip to folder
 unzip(zipped_file, exdir = path_unzip)
 
 # read data ----
 # United States Cancer Statistics
-# for years 1999-2017
+# for years 1999-2018
 # by cancer site ----
 
-by_cancer <- read_delim("data/raw/USCS_1999-2017/BYSITE.TXT",
+by_cancer <- read_delim("data/raw/USCS_1999-2018/BYSITE.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", "."),
   col_names = TRUE,
@@ -56,6 +57,8 @@ by_cancer <- read_delim("data/raw/USCS_1999-2017/BYSITE.TXT",
     )
 )
 
+glimpse(by_cancer)
+
 by_cancer <- by_cancer %>%
   filter(EVENT_TYPE == "Incidence") %>%
   mutate(area = "US",
@@ -71,9 +74,9 @@ write_rds(by_cancer, "data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2017
+# for years 1999-2018
 # by age, race, and ethnicity ----
-by_age <- read_delim("data/raw/USCS_1999-2017/BYAGE.TXT",
+by_age <- read_delim("data/raw/USCS_1999-2018/BYAGE.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -101,9 +104,9 @@ write_rds(by_age, "data/tidy/USCS_by_age.rds")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2017
+# for years 1999-2018
 # by state and region ----
-by_state <- read_delim("data/raw/USCS_1999-2017/BYAREA.TXT",
+by_state <- read_delim("data/raw/USCS_1999-2018/BYAREA.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -126,6 +129,8 @@ by_state <- read_delim("data/raw/USCS_1999-2017/BYAREA.TXT",
     )
 )
 
+glimpse(by_state)
+
 by_state <- by_state %>% drop_na()
 
 # save dataset
@@ -136,9 +141,9 @@ write_rds(by_state, "data/tidy/USCS_by_state.rds")
 
 # read data
 # United States Cancer Statistics
-# for years 1999-2017
+# for years 1999-2018
 # by state and county ----
-by_county <- read_delim("data/raw/USCS_1999-2017/BYAREA_COUNTY.TXT",
+by_county <- read_delim("data/raw/USCS_1999-2018/BYAREA_COUNTY.TXT",
   delim = "|",
   na = c(" ", "", "NA", "~", ".", "+", "-"),
   col_names = TRUE,
@@ -183,6 +188,14 @@ by_az_county <- by_az_county %>%
   mutate(AREA = str_replace(by_az_county$AREA, " County \\(\\)", ""))
 by_az_county <- by_az_county %>%
   mutate(AREA = str_replace(by_az_county$AREA, " - 1994\\+", ""))
+
+# set order of race levels 
+by_az_county$RACE <- ordered(by_az_county$RACE, levels = c("All Races",
+                                                           "White",
+                                                           "Hispanic",
+                                                           "American Indian/Alaska Native",
+                                                           "Black",
+                                                           "Asian/Pacific Islander"))
 
 # save dataset
 write_rds(by_az_county, "data/tidy/USCS_by_az_county.rds")
