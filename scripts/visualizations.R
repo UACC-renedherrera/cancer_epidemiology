@@ -30,7 +30,7 @@ theme_uazcc_brand <- theme_clean(base_size = 14) +
     ),
     panel.background = element_rect(fill = "white"),
     panel.grid = element_line(color = "#1E5288"),
-    plot.background = element_rect(fill = "#EcE9EB"),
+    #plot.background = element_rect(fill = "#EcE9EB"),
     aspect.ratio = 9 / 16,
     legend.background = element_rect(fill = "white"),
     legend.position = "right",
@@ -918,7 +918,7 @@ uscs_az %>%
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
   coord_flip() +
-  labs(title = "Cancer Incidence and Death Rates",
+  labs(title = "Arizona Cancer Incidence and Death Rates",
        subtitle = "2014-2018, By Race and Ethnicity, Both Sexes",
        x = "Race and Ethnicity",
        y = "Age adjusted rate per 100,000",
@@ -942,7 +942,7 @@ uscs_az %>%
   group_by(event_type) %>%
   gt() %>%
   tab_header(
-    title = "Cancer Incidence and Death Rates",
+    title = "Arizona Cancer Incidence and Death Rates",
     subtitle = "2014-2018, By Race and Ethnicity, Both Sexes"
   ) %>%
   cols_label(race = "Race",
@@ -963,7 +963,7 @@ uscs_az %>%
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
   coord_flip() +
-  labs(title = "Cancer Incidence and Death Rates",
+  labs(title = "Arizona Cancer Incidence and Death Rates",
        subtitle = "2014-2018, By Race and Ethnicity, Male",
        x = "Race and Ethnicity",
        y = "Age adjusted rate per 100,000",
@@ -987,7 +987,7 @@ uscs_az %>%
   group_by(event_type) %>%
   gt() %>%
   tab_header(
-    title = "Cancer Incidence and Death Rates",
+    title = "Arizona Cancer Incidence and Death Rates",
     subtitle = "2014-2018, By Race and Ethnicity, Male"
   ) %>%
   cols_label(race = "Race",
@@ -1008,7 +1008,7 @@ uscs_az %>%
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(mapping = aes(ymin = age_adjusted_ci_lower, ymax = age_adjusted_ci_upper), position = "dodge", color = "#70B865") +
   coord_flip() +
-  labs(title = "Cancer Incidence and Death Rates",
+  labs(title = "Arizona Cancer Incidence and Death Rates",
        subtitle = "2014-2018, By Race and Ethnicity, Female",
        x = "Race and Ethnicity",
        y = "Age adjusted rate per 100,000",
@@ -1018,22 +1018,22 @@ uscs_az %>%
   theme_uazcc_brand
 
 ggsave(
-  filename = "figures/charts/cancer_incidence_death_rates_by_race_female.svg",
-  device = "svg"
+  filename = "figures/charts/cancer_incidence_death_rates_by_race_female.png",
+  device = "png"
 )
 
 # data table 
 uscs_az %>%
   filter(year == "2014-2018",
-         sex == "Male",
+         sex == "Female",
          site == "All Cancer Sites Combined") %>%
   select(event_type, race, age_adjusted_rate) %>%
   arrange(event_type, race) %>%
   group_by(event_type) %>%
   gt() %>%
   tab_header(
-    title = "Cancer Incidence and Death Rates",
-    subtitle = "2014-2018, By Race and Ethnicity, Male"
+    title = "Arizona Cancer Incidence and Death Rates",
+    subtitle = "2014-2018, By Race and Ethnicity, Female"
   ) %>%
   cols_label(race = "Race",
              age_adjusted_rate = "Age adjusted rate") %>%
@@ -1056,7 +1056,7 @@ by_az_county_sf %>%
          site == "All Cancer Sites Combined") %>%
   ggplot() +
   geom_sf(mapping = aes(fill = age_adjusted_rate)) +
-  labs(title = "Cancer Incidence Rates",
+  labs(title = "Arizona Cancer Incidence Rates",
        subtitle = "2014-2018, By AZ County, Both Sexes, All Races",
        x = "",
        y = "",
@@ -1078,7 +1078,7 @@ by_az_county_sf %>%
          site == "All Cancer Sites Combined") %>%
   ggplot() +
   geom_sf(mapping = aes(fill = age_adjusted_rate)) +
-  labs(title = "Cancer Mortality Rates",
+  labs(title = "Arizona Cancer Mortality Rates",
        subtitle = "2014-2018, By AZ County, Both Sexes, All Races",
        x = "",
        y = "",
