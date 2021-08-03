@@ -26,7 +26,7 @@ by_state <- read_rds("data/tidy/USCS_by_state.rds")
 
 # for all races
 # for all sexes
-# years 2013-2017
+# years 2014-2018
 # all cancers in descending order
 # data table
 by_state %>%
@@ -35,7 +35,7 @@ by_state %>%
     EVENT_TYPE == "Incidence",
     RACE == "All Races",
     SEX == "Male and Female",
-    YEAR == "2013-2017"
+    YEAR == "2014-2018"
   ) %>%
   arrange(desc(AGE_ADJUSTED_RATE)) %>%
   select(SITE, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
@@ -247,14 +247,15 @@ write_rds(by_az_county_sf, "data/tidy/ucsc_by_county_spatial.rds")
 
 # data table
 by_az_county %>%
-  group_by(AREA) %>%
+  group_by(area) %>%
   filter(
-    EVENT_TYPE == "Incidence",
-    RACE == "All Races",
-    SEX == "Male and Female",
-    SITE == "All Cancer Sites Combined"
+    event_type == "Incidence",
+    race == "All Races",
+    sex == "Male and Female",
+    site == "All Cancer Sites Combined"
   ) %>%
-  select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) # %>%
+  select(area, age_adjusted_rate)  %>%
+  arrange(desc(age_adjusted_rate))
   # kable(
   #   caption = "Overall Age adjusted incidence rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
   #   col.names = c("County", "Age Adjusted Rate", "95% Confidence Interval LL", "95% Confidence Interval UL")
@@ -785,20 +786,31 @@ by_az_county <- read_rds("data/tidy/USCS_by_az_county.rds")
 # data table
 # age adjusted mortality rate, all cancers, all races, all sexes
 by_az_county %>%
-  drop_na() %>%
-  group_by(AREA) %>%
+  group_by(area) %>%
   filter(
-    AREA %in% south_az,
-    EVENT_TYPE == "Mortality",
-    RACE == "All Races",
-    SEX == "Male and Female",
-    SITE == "All Cancer Sites Combined"
+    event_type == "Mortality",
+    race == "All Races",
+    sex == "Male and Female",
+    site == "All Cancer Sites Combined"
   ) %>%
-  select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
-  kable(
-    caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
-    col.names = c("County", "Age Adjusted Rate per 100,000", "95% Confidence Interval LL", "95% Confidence Interval UL")
-  )
+  select(area, age_adjusted_rate)  %>%
+  arrange(desc(age_adjusted_rate))
+
+# by_az_county %>%
+#   drop_na() %>%
+#   group_by(AREA) %>%
+#   filter(
+#     AREA %in% south_az,
+#     EVENT_TYPE == "Mortality",
+#     RACE == "All Races",
+#     SEX == "Male and Female",
+#     SITE == "All Cancer Sites Combined"
+#   ) %>%
+#   select(AREA, AGE_ADJUSTED_RATE, AGE_ADJUSTED_CI_LOWER, AGE_ADJUSTED_CI_UPPER) %>%
+#   kable(
+#     caption = "Age adjusted mortality rates by Arizona county for years 2013-2017; all sexes, races, and cancer sites combined",
+#     col.names = c("County", "Age Adjusted Rate per 100,000", "95% Confidence Interval LL", "95% Confidence Interval UL")
+#   )
 
 # plot
 by_az_county %>%
