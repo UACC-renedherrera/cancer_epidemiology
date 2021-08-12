@@ -41,7 +41,7 @@ by_cancer <- read_delim("data/raw/USCS_1999-2018/BYSITE.TXT",
   col_names = TRUE,
   col_types =
     cols(
-      YEAR = col_factor(),
+      YEAR = col_character(),
       RACE = col_factor(),
       SEX = col_factor(),
       SITE = col_factor(),
@@ -59,6 +59,8 @@ by_cancer <- read_delim("data/raw/USCS_1999-2018/BYSITE.TXT",
 
 glimpse(by_cancer)
 
+write_rds(by_cancer, "data/tidy/uscs_usa_by_cancer_1999-2018.rds")
+
 by_cancer <- by_cancer %>%
   filter(EVENT_TYPE == "Incidence") %>%
   mutate(area = "US",
@@ -67,7 +69,7 @@ by_cancer <- by_cancer %>%
 uscs_list_of <- distinct(by_cancer, SITE)
 
 # save dataset
-write_rds(by_cancer, "data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
+write_rds(by_cancer, "data/tidy/incidence_us_uscs_1999-2018_by_cancer.rds")
 
 # use datamaid package to generate codebook
 # makeCodebook(by_cancer, file = "data/tidy/codebook_USCS_by_cancer.Rmd")
