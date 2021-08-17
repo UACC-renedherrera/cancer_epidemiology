@@ -42,8 +42,8 @@ uscs_by_cancer <- read_rds("data/tidy/uscs_usa_by_cancer_1999-2018.rds") %>%
   clean_names()
 
 # change date from factor to date
-uscs_by_cancer <- uscs_by_cancer %>%
-  mutate(year = as_date(year, format = "%Y"))
+# uscs_by_cancer <- uscs_by_cancer %>%
+#   mutate(year = as_date(year, format = "%Y"))
 
 # inspect
 glimpse(uscs_by_cancer)
@@ -82,7 +82,8 @@ uscs_by_cancer %>%
          sex == "Female",
          event_type == "Incidence") %>%
   select(year, race, age_adjusted_rate) %>%
-  arrange(year, race) %>%
+  pivot_wider(names_from = race, values_from = age_adjusted_rate) %>%
+  arrange(year) %>%
   write_csv("figures/tables/incidence_breast_usa_trend.csv")
 
 # AZ
