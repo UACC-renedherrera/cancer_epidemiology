@@ -99,7 +99,8 @@ uazcc_lung_spatial %>%
   theme_uazcc_brand_spatial +
   labs(title = "Lung Cancer Incidence",
        subtitle = "Year 2014-2018; All Races; Male and Female",
-       fill = "Age Adjusted Rate per 100,000")
+       fill = "Age Adjusted Rate per 100,000",
+       caption = "Source: US Cancer Statistics")
 
 ggsave("figures/maps/uscs_uazcc_lung_incidence.png",
        width = 16,
@@ -117,7 +118,8 @@ uazcc_lung_spatial %>%
   theme_uazcc_brand_spatial +
   labs(title = "Lung Cancer Mortality",
        subtitle = "Year 2014-2018; All Races; Male and Female",
-       fill = "Age Adjusted Rate per 100,000")
+       fill = "Age Adjusted Rate per 100,000",
+       caption = "Source: US Cancer Statistics")
 
 ggsave("figures/maps/uscs_uazcc_lung_mortality.png",
        width = 16,
