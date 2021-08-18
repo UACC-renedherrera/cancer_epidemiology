@@ -27,7 +27,7 @@ theme_uazcc_brand <- theme_clean(base_size = 16) +
     aspect.ratio = 9 / 16,
     legend.background = element_rect(fill = "white"),
     legend.position = "right",
-    plot.caption = element_text(size = 8),
+    plot.caption = element_text(size = 10),
     # plot.subtitle = element_text(size = 12),
     # plot.title = element_text(size = 14),
     strip.background = element_rect(fill = "#EcE9EB")
@@ -46,20 +46,39 @@ theme_uazcc_brand <- theme_clean(base_size = 16) +
 # Data Grouped By	Race, Sex
 
 # read data 
-azdhs_lung <- read_csv("data/raw/AZDHS/query_catchment_lung_incidence_2014-2018_by_race.csv") %>%
-  clean_names()
+azdhs_lung <- read_csv("data/raw/AZDHS/query_catchment_lung_incidence_2014-2018_by_race.csv",
+                       skip = 1,
+                       col_names = c(
+                         "race",
+                         "sex",
+                         "count",
+                         "population",
+                         "age_adjusted_rate",
+                         "ci_95_min",
+                         "ci_95_max"
+                       ),
+                       col_types = cols(
+                         "race" = col_factor(),
+                         "sex" = col_factor(),
+                         "count" = col_number(),
+                         "population" = col_number(),
+                         "age_adjusted_rate" = col_number(),
+                         "ci_95_min" = col_number(),
+                         "ci_95_max" = col_number()),
+                       na = c("", "^", "NA", "*"))
 
 # plot 
 azdhs_lung %>%
   filter(race != "All",
          sex != "All") %>%
-  ggplot(mapping = aes(x = race, y = age_adjusted_cancer_incidence_rates_incidence_per_100_000_population_03_23_2021)) +
+  ggplot(mapping = aes(x = race, y = age_adjusted_rate)) +
   geom_col(mapping = aes(fill = sex), position = "dodge") +
   labs(title = "Lung Cancer Incidence in UA Catchment Counties",
        subtitle = "Year 2014-2018",
        x = "Race",
        y = "Age Adjusted Rate per 100,000",
-       fill = "") +
+       fill = "Sex",
+       caption = "Source: IBIS Query of the Arizona Cancer Registry. 23 March 2021") +
   scale_fill_brewer(palette = "Set1") +
   theme_uazcc_brand
 
