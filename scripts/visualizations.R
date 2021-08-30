@@ -11,16 +11,16 @@ library(gt)
 uaz_blues3 <- c("#deebf7", "#9ecae1", "#3182bd")
 uaz_blues4 <- c("#eff3ff", "#bdd7e7", "#6baed6", "#2171b5")
 
-# red palette 
+# red palette
 uaz_reds3 <- c("#fee0d2", "#fc9272", "#de2d26")
 uaz_reds4 <- c("#fee5d9", "#fcae91", "#fb6a4a", "#cb181d")
 
-# red and blue palette 
+# red and blue palette
 uaz_red_blue <- c("#AB0520", "#0C234B")
 
 # theme ####
 # set consistent theme for graphics & data visualizations
-theme_uazcc_brand <- theme_clean(base_size = 14) +
+theme_uazcc_brand <- theme_clean(base_size = 18) +
   theme(
     text = element_text(
       family = "sans",
@@ -163,7 +163,7 @@ incidence %>%
   geom_bar(stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Top 10 Cancers by Rates of New Cancer Cases",
-    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, 
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017,
     All Races/Ethnicities, Male and Female Combined",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -174,7 +174,7 @@ incidence %>%
   theme(legend.position = "bottom") +
   scale_fill_manual(values = uaz_blues3)
 
-# save to file 
+# save to file
 ggsave("incidence_top_10_cancer_usa_az_catchment.svg",
   width = 20,
   height = 11.25,
@@ -184,7 +184,7 @@ ggsave("incidence_top_10_cancer_usa_az_catchment.svg",
 )
 
 # top 10 for white in catchment
-# plot 
+# plot
 incidence %>%
   filter(area == "Catchment",
          race == "Non-Hispanic White",
@@ -205,7 +205,7 @@ incidence %>%
   theme_clean() +
   theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("incidence_top_10_cancer_catchment_white.svg",
        width = 20,
        height = 11.25,
@@ -215,7 +215,7 @@ ggsave("incidence_top_10_cancer_catchment_white.svg",
 )
 
 # top 10 for hispanic in catchment
-# plot 
+# plot
 incidence %>%
   filter(area == "Catchment",
          race == "White Hispanic",
@@ -234,9 +234,9 @@ incidence %>%
     ADHS IBIS-PH"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("incidence_top_10_cancer_catchment_hispanic.svg",
        width = 20,
        height = 11.25,
@@ -246,7 +246,7 @@ ggsave("incidence_top_10_cancer_catchment_hispanic.svg",
 )
 
 # top 10 for hispanic in catchment
-# plot 
+# plot
 incidence %>%
   filter(area == "Catchment",
          race == "American Indian",
@@ -265,9 +265,9 @@ incidence %>%
     ADHS IBIS-PH"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("incidence_top_10_cancer_catchment_ai.svg",
        width = 20,
        height = 11.25,
@@ -277,17 +277,17 @@ ggsave("incidence_top_10_cancer_catchment_ai.svg",
 )
 
 # comparing USA AZ Catchment
-# disparities vs USA 
-# read file 
+# disparities vs USA
+# read file
 incidence_catchment_disparate <- read_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities.rds")
 
 # convert to factor
 incidence_catchment_disparate$area <- as.factor(incidence_catchment_disparate$area)
 
-# order factor 
+# order factor
 incidence_catchment_disparate$area <- ordered(incidence_catchment_disparate$area, levels = c("US", "AZ", "Catchment"))
 
-# check 
+# check
 levels(incidence_catchment_disparate$area)
 
 # plot disparity in catchment vs us and az
@@ -297,7 +297,7 @@ incidence_catchment_disparate %>%
   geom_bar(aes(fill = area), stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Cancers in Catchment with Incidence Greater than US",
-    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, 
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017,
     All Races/Ethnicities, Male and Female Combined",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -308,7 +308,7 @@ incidence_catchment_disparate %>%
   theme(legend.position = "bottom") +
   scale_fill_manual(values = uaz_blues3)
 
-# save 
+# save
 ggsave("incidence_disparate_usa_az_catchment.svg",
   width = 20,
   height = 11.25,
@@ -317,27 +317,27 @@ ggsave("incidence_disparate_usa_az_catchment.svg",
   scale = .5
 )
 
-# disparity white in catchment 
-# read file 
+# disparity white in catchment
+# read file
 incidence_catchment_disparate_white <- read_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_white.rds")
 
 # set as factor
 incidence_catchment_disparate_white$area <- as.factor(incidence_catchment_disparate_white$area)
 
-# order 
+# order
 incidence_catchment_disparate_white$area <- ordered(incidence_catchment_disparate_white$area, levels = c("US", "AZ", "Catchment", "White Non-Hispanic"))
 
-# check 
+# check
 levels(incidence_catchment_disparate_white$area)
 
-# plot disparity of white in catchment 
+# plot disparity of white in catchment
 incidence_catchment_disparate_white %>%
   arrange(desc(area)) %>%
   ggplot(data = incidence_catchment_disparate_white, mapping = aes(x = rate, y = reorder(SITE, rate), group = area)) +
   geom_bar(aes(fill = area), stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Cancers for White Non Hispanic in Catchment with Incidence Greater than US",
-    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, 
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017,
     White Non-Hispanic only, Male and Female Combined",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -348,7 +348,7 @@ incidence_catchment_disparate_white %>%
   theme(legend.position = "bottom") +
   scale_fill_manual(values = uaz_blues4)
 
-# save to file 
+# save to file
 ggsave("incidence_disparate_usa_az_catchment_white.svg",
        width = 20,
        height = 11.25,
@@ -357,27 +357,27 @@ ggsave("incidence_disparate_usa_az_catchment_white.svg",
        scale = .5
 )
 
-# disparity hispanic in catchment 
-# read file 
+# disparity hispanic in catchment
+# read file
 incidence_catchment_disparate_hispanic <- read_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_hispanic.rds")
 
 # set as factor
 incidence_catchment_disparate_hispanic$area <- as.factor(incidence_catchment_disparate_hispanic$area)
 
-# order 
+# order
 incidence_catchment_disparate_hispanic$area <- ordered(incidence_catchment_disparate_hispanic$area, levels = c("US", "AZ", "Catchment", "White Hispanic"))
 
-# check 
+# check
 levels(incidence_catchment_disparate_hispanic$area)
 
-# plot of hispanic in catchment disparity 
+# plot of hispanic in catchment disparity
 incidence_catchment_disparate_hispanic %>%
   arrange(desc(area)) %>%
   ggplot(data = incidence_catchment_disparate_hispanic, mapping = aes(x = rate, y = reorder(SITE, rate), group = area)) +
   geom_bar(aes(fill = area), stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Cancers for Hispanic in Catchment with Incidence Greater than US",
-    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, 
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017,
     Hispanic only, Male and Female Combined",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -388,7 +388,7 @@ incidence_catchment_disparate_hispanic %>%
   theme(legend.position = "bottom") +
   scale_fill_manual(values = uaz_blues4)
 
-# save to file 
+# save to file
 ggsave("incidence_disparate_usa_az_catchment_hispanic.svg",
        width = 20,
        height = 11.25,
@@ -397,27 +397,27 @@ ggsave("incidence_disparate_usa_az_catchment_hispanic.svg",
        scale = .5
 )
 
-# disparity american indian in catchment 
+# disparity american indian in catchment
 # read file
 incidence_catchment_disparate_ai <- read_rds("data/tidy/uazcc_incidence_table_2013-2017_disparities_ai.rds")
 
 # set as factor
 incidence_catchment_disparate_ai$area <- as.factor(incidence_catchment_disparate_ai$area)
 
-# order 
+# order
 incidence_catchment_disparate_ai$area <- ordered(incidence_catchment_disparate_ai$area, levels = c("US", "AZ", "Catchment", "American Indian"))
 
-# check 
+# check
 levels(incidence_catchment_disparate_ai$area)
 
-# plot of american indian in catchment disparity 
+# plot of american indian in catchment disparity
 incidence_catchment_disparate_ai %>%
   arrange(desc(area)) %>%
   ggplot(data = incidence_catchment_disparate_ai, mapping = aes(x = rate, y = reorder(SITE, rate), group = area)) +
   geom_bar(aes(fill = area), stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Cancers for American Indian in Catchment with Incidence Greater than US",
-    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017, 
+    subtitle = "Comparing, USA, AZ, & UAZCC Catchment 2013-2017,
     American Indian only, Male and Female Combined",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -428,7 +428,7 @@ incidence_catchment_disparate_ai %>%
   theme(legend.position = "bottom") +
   scale_fill_manual(values = uaz_blues4)
 
-# save to file 
+# save to file
 ggsave("incidence_disparate_usa_az_catchment_ai.svg",
        width = 20,
        height = 11.25,
@@ -469,8 +469,8 @@ mortality %>%
     caption = "Source: Surveillance, Epidemiology, and End Results (SEER) Program (www.seer.cancer.gov)"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
-  
+  theme(legend.position = "bottom")
+
 ggsave("mortality_top_10_cancer_catchment.svg",
   width = 20,
   height = 11.25,
@@ -479,7 +479,7 @@ ggsave("mortality_top_10_cancer_catchment.svg",
   scale = .5
 )
 
-# compare top 10 catchment with usa and az 
+# compare top 10 catchment with usa and az
 mortality %>%
   filter(
     area %in% c("US", "AZ", "Catchment"),
@@ -492,7 +492,7 @@ mortality %>%
   geom_bar(aes(fill = area), stat = "identity", position = "dodge", color = "black") +
   labs(
     title = "Top 10 Cancers by Rates of Cancer Deaths",
-    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018, 
+    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018,
     All Races/Ethnicities, Male and Female",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -511,7 +511,7 @@ ggsave("mortality_top_10_cancer_usa_az_catchment.svg",
 )
 
 # top 10 for white in catchment
-# plot 
+# plot
 mortality %>%
   filter(area == "Catchment",
          race == "White",
@@ -530,9 +530,9 @@ mortality %>%
     ADHS IBIS-PH"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("mortality_top_10_cancer_catchment_white.svg",
        width = 20,
        height = 11.25,
@@ -542,7 +542,7 @@ ggsave("mortality_top_10_cancer_catchment_white.svg",
 )
 
 # top 10 for hispanic in catchment
-# plot 
+# plot
 mortality %>%
   filter(area == "Catchment",
          race == "Hispanic",
@@ -561,9 +561,9 @@ mortality %>%
     ADHS IBIS-PH"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("mortality_top_10_cancer_catchment_hispanic.svg",
        width = 20,
        height = 11.25,
@@ -573,7 +573,7 @@ ggsave("mortality_top_10_cancer_catchment_hispanic.svg",
 )
 
 # top 10 for american indian in catchment
-# plot 
+# plot
 mortality %>%
   filter(area == "Catchment",
          race == "American Indian/Alaska Native",
@@ -592,9 +592,9 @@ mortality %>%
     ADHS IBIS-PH"
   ) +
   theme_clean() +
-  theme(legend.position = "bottom") 
+  theme(legend.position = "bottom")
 
-# save to file 
+# save to file
 ggsave("mortality_top_10_cancer_catchment_ai.svg",
        width = 20,
        height = 11.25,
@@ -603,7 +603,7 @@ ggsave("mortality_top_10_cancer_catchment_ai.svg",
        scale = .5
 )
 
-# disparities catchment 
+# disparities catchment
 mortality_catch_disp <- read_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities.rds")
 
 mortality_catch_disp$area <- as.factor(mortality_catch_disp$area)
@@ -616,7 +616,7 @@ ggplot(data = mortality_catch_disp, mapping = aes(x = rate, y = reorder(cancer, 
   geom_bar(position = "dodge", stat = "identity", color = "black") +
   labs(
     title = "Top 10 Cancers in Catchment with Incidence Greater than US",
-    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018, 
+    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018,
     All Races/Ethnicities, Male and Female",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -624,7 +624,7 @@ ggplot(data = mortality_catch_disp, mapping = aes(x = rate, y = reorder(cancer, 
   ) +
   theme_clean() +
   theme(legend.position = "bottom") +
-  scale_fill_manual(values = uaz_reds3)  
+  scale_fill_manual(values = uaz_reds3)
 
 ggsave("mortality_disparity_usa_az_catchment.svg",
        width = 20,
@@ -634,7 +634,7 @@ ggsave("mortality_disparity_usa_az_catchment.svg",
        scale = .5
 )
 
-# mortality disparities for white in catchment 
+# mortality disparities for white in catchment
 mortality_catch_disp_white <- read_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_white.rds")
 
 mortality_catch_disp_white$area <- as.factor(mortality_catch_disp_white$area)
@@ -647,7 +647,7 @@ ggplot(data = mortality_catch_disp_white, mapping = aes(x = rate, y = reorder(ca
   geom_bar(position = "dodge", stat = "identity", color = "black") +
   labs(
     title = "Cancers for Non Hispanic White in Catchment with Mortality Greater than US",
-    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018, 
+    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018,
     White Non Hispanic only, Male and Female",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -655,7 +655,7 @@ ggplot(data = mortality_catch_disp_white, mapping = aes(x = rate, y = reorder(ca
   ) +
   theme_clean() +
   theme(legend.position = "bottom") +
-  scale_fill_manual(values = uaz_reds4)  
+  scale_fill_manual(values = uaz_reds4)
 
 ggsave("mortality_disparity_usa_az_catchment_white.svg",
        width = 20,
@@ -665,7 +665,7 @@ ggsave("mortality_disparity_usa_az_catchment_white.svg",
        scale = .5
 )
 
-# mortality disparities for hispanic in catchment 
+# mortality disparities for hispanic in catchment
 mortality_catch_disp_hisp <- read_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_hispanic.rds")
 
 mortality_catch_disp_hisp$area <- as.factor(mortality_catch_disp_hisp$area)
@@ -678,7 +678,7 @@ ggplot(data = mortality_catch_disp_hisp, mapping = aes(x = rate, y = reorder(can
   geom_bar(position = "dodge", stat = "identity", color = "black") +
   labs(
     title = "Cancers for Hispanic in Catchment with Mortality Greater than US",
-    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018, 
+    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018,
     Hispanic only, Male and Female",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -686,7 +686,7 @@ ggplot(data = mortality_catch_disp_hisp, mapping = aes(x = rate, y = reorder(can
   ) +
   theme_clean() +
   theme(legend.position = "bottom") +
-  scale_fill_manual(values = uaz_reds4)  
+  scale_fill_manual(values = uaz_reds4)
 
 ggsave("mortality_disparity_usa_az_catchment_hisp.svg",
        width = 20,
@@ -696,7 +696,7 @@ ggsave("mortality_disparity_usa_az_catchment_hisp.svg",
        scale = .5
 )
 
-# mortality disparities for American Indian in catchment 
+# mortality disparities for American Indian in catchment
 mortality_catch_disp_ai <- read_rds("data/tidy/uazcc_mortality_table_2014-2018_disparities_ai.rds")
 
 mortality_catch_disp_ai$area <- as.factor(mortality_catch_disp_ai$area)
@@ -709,7 +709,7 @@ ggplot(data = mortality_catch_disp_ai, mapping = aes(x = rate, y = reorder(cance
   geom_bar(position = "dodge", stat = "identity", color = "black") +
   labs(
     title = "Cancers for American Indian in Catchment with Mortality Greater than US",
-    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018, 
+    subtitle = "Comparing US, AZ, UAZCC Catchment 2014-2018,
     American Indian only, Male and Female",
     y = "",
     x = "Age Adjusted Rate per 100,000",
@@ -717,7 +717,7 @@ ggplot(data = mortality_catch_disp_ai, mapping = aes(x = rate, y = reorder(cance
   ) +
   theme_clean() +
   theme(legend.position = "bottom") +
-  scale_fill_manual(values = uaz_reds4)  
+  scale_fill_manual(values = uaz_reds4)
 
 ggsave("mortality_disparity_usa_az_catchment_ai.svg",
        width = 20,
@@ -909,7 +909,7 @@ uscs_az <- read_rds("data/tidy/uscs_by_state_az.rds")
 
 glimpse(uscs_az)
 
-# bar chart 
+# bar chart
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Male and Female",
@@ -932,7 +932,7 @@ uscs_az %>%
     device = "svg"
   )
 
-# data table 
+# data table
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Male and Female",
@@ -954,7 +954,7 @@ uscs_az %>%
   )
 
 # Cancer incidence and death rates by race & ethnicity, male, all types of cancer ####
-# bar chart 
+# bar chart
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Male",
@@ -977,7 +977,7 @@ ggsave(
   device = "svg"
 )
 
-# data table 
+# data table
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Male",
@@ -999,7 +999,7 @@ uscs_az %>%
   )
 
 # Cancer incidence and death rates by race & ethnicity, female, all types of cancer ####
-# bar chart 
+# bar chart
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Female",
@@ -1022,7 +1022,7 @@ ggsave(
   device = "png"
 )
 
-# data table 
+# data table
 uscs_az %>%
   filter(year == "2014-2018",
          sex == "Female",
