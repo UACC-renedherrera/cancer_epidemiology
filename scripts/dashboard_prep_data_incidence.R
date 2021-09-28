@@ -1,5 +1,6 @@
 # Prepare data for use in a shiny application data table 
 # René Dario Herrera 
+# renedherrera at email dot arizona dot edu 
 # May 2021
 
 # packages 
@@ -8,7 +9,7 @@ library(tidyverse)
 
 # read data 
 # overall usa incidence by cancer ----
-usa_by_cancer <- read_rds("data/tidy/incidence_us_uscs_2013-2017_by_cancer.rds")
+usa_by_cancer <- read_rds("data/tidy/")
 
 # inspect 
 glimpse(usa_by_cancer)
