@@ -10,7 +10,7 @@ incidence_table <- read_rds("data/incidence_table.rds")
 
 # User interface ---- 
 ui <- fluidPage(
-    titlePanel("Incidence Table"),
+    titlePanel("Cancer Incidence Table"),
 
     # Create a new Row in the UI for selectInputs
     fluidRow(
