@@ -98,6 +98,15 @@ by_age <- read_delim("data/raw/USCS_1999-2018/BYAGE.TXT",
     )
 )
 
+by_age %>%
+  distinct(AGE)
+
+ped_list <- c("<1",
+              "1-4",
+              "5-9",
+              "10-14",
+              "15-19")
+
 # save dataset
 write_rds(by_age, "data/tidy/USCS_by_age.rds")
 
@@ -167,7 +176,11 @@ by_county <- read_delim("data/raw/USCS_1999-2018/BYAREA_COUNTY.TXT",
       CRUDE_CI_UPPER = col_number(),
       CRUDE_RATE = col_number()
     )
-)
+) %>%
+  mutate(SOURCE = "USCS")
+
+by_county %>%
+  distinct(YEAR)
 
 # filter to only AZ counties
 # remove "AZ: Unknown (04999)"
@@ -198,6 +211,8 @@ by_az_county$RACE <- ordered(by_az_county$RACE, levels = c("All Races",
                                                            "American Indian/Alaska Native",
                                                            "Black",
                                                            "Asian/Pacific Islander"))
+
+glimpse(by_az_county)
 
 # save dataset
 write_rds(by_az_county, "data/tidy/USCS_by_az_county.rds")
