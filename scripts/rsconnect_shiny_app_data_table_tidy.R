@@ -491,4 +491,4 @@ write_rds(x = cancer_epi_data,
           file = "communication/shiny_apps/cancer_incidence_mortality_rates/data/rate_data_table.rds")
 
 write_csv(x = cancer_epi_data,
-          file = "data/tidy/incidence_mortality_rate_data_table.rds")
+          file = "data/tidy/incidence_mortality_rate_data_table.csv")
