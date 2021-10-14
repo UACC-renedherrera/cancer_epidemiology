@@ -1,4 +1,4 @@
-Click here to read the documentation: https://uacc-renedherrera.github.io/cancer_epidemiology/ 
+Click here to read the documentation: https://uacc-renedherrera.github.io/cancer_epidemiology/
 
 
 # Cancer Epidemiology
