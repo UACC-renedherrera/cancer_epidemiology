@@ -52,3 +52,17 @@ Race Filter	White, Non Hispanic, White, Hispanic, Black, American Indian, Asian/
 County Filter	County, Cochise, Pima, Pinal, Santa Cruz, Yuma
 Data Grouped By	Cancer Sites, Sex
 ```
+
+
+# R Resources
+
+
+## Happy Git and GitHub for the useR
+
+https://happygitwithr.com/
+
+
+## Big Book of R
+
+
+https://www.bigbookofr.com/?s=09

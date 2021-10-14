@@ -1,3 +1,6 @@
+Click here to read the documentation: https://uacc-renedherrera.github.io/cancer_epidemiology/ 
+
+
 # Cancer Epidemiology
 
 
@@ -7,7 +10,7 @@
 This project intends to describe cancer epidemiology in Arizona using data from the following 3 sources:
 
 
-- United States Cancer Statistics. 
+- United States Cancer Statistics.
 - Arizona Cancer Registry Database Query Module.
 - Surveillance, Epidemiology, and End Results (SEER) Program (https://seer.cancer.gov/) SEER*Stat Database.
 
@@ -15,11 +18,11 @@ This project intends to describe cancer epidemiology in Arizona using data from 
 To produce tables and visualizations to compare and contrast differences in cancer incidence and mortality.
 
 
-- United States 
-- Arizona 
-- University of Arizona Cancer Center (UAZCC) Catchment 
+- United States
+- Arizona
+- University of Arizona Cancer Center (UAZCC) Catchment
 - Arizona Counties
-- UAZCC Catchment Counties 
+- UAZCC Catchment Counties
 - Hispanic, non-Hispanic, and American Indian populations
 
 
@@ -29,7 +32,7 @@ To produce tables and visualizations to compare and contrast differences in canc
 The [USCS data tidy script](/scripts/USCS_data_tidy.R) will download data from the CDC.gov website and prepare it for further analysis. Four RDS files will be generated to describe incidence and mortality by:
 
 
-- cancer 
+- cancer
 - age
 - state
 - states and counties
